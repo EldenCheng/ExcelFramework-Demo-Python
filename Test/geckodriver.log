@@ -1,0 +1,25 @@
+1500874998083	geckodriver	INFO	geckodriver 0.18.0
+1500874998093	geckodriver	INFO	Listening on 127.0.0.1:51791
+1500875000131	geckodriver::marionette	INFO	Starting browser C:\Program Files\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1500875008734	Marionette	INFO	Listening on port 51799
+1500875009787	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: chrome://marionette/content/error.js, line 211: Error: Timed out
+1500875060620	Marionette	INFO	Ceased listening
+1500875165435	geckodriver	INFO	geckodriver 0.18.0
+1500875165445	geckodriver	INFO	Listening on 127.0.0.1:52116
+1500875167380	geckodriver::marionette	INFO	Starting browser C:\Program Files\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1500875172206	Marionette	INFO	Listening on port 52124
+1500875172654	Marionette	WARN	TLS certificate errors will be ignored for this session
+1500875188431	Marionette	INFO	Ceased listening
+1500875202138	geckodriver	INFO	geckodriver 0.18.0
+1500875202146	geckodriver	INFO	Listening on 127.0.0.1:52244
+1500875204084	geckodriver::marionette	INFO	Starting browser C:\Program Files\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1500875208673	Marionette	INFO	Listening on port 52252
+1500875209510	Marionette	WARN	TLS certificate errors will be ignored for this session
+1500875235701	Marionette	INFO	Ceased listening
+1500875242324	geckodriver	INFO	geckodriver 0.18.0
+1500875242339	geckodriver	INFO	Listening on 127.0.0.1:52374
+1500875244122	geckodriver::marionette	INFO	Starting browser C:\Program Files\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1500875248843	Marionette	INFO	Listening on port 52382
+1500875249518	Marionette	WARN	TLS certificate errors will be ignored for this session
+1500875264621	Marionette	INFO	Ceased listening
