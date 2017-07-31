@@ -1,6 +1,7 @@
 from Common.CONST import CONST
 from Common.Excel import Excel
 from Common.WebPage import WebPage
+from Common.Report import *
 from Common.Alias import *
 
 from selenium.webdriver.support.wait import WebDriverWait
@@ -31,27 +32,27 @@ class TC1(unittest.TestCase):
         self.report.Select_Sheet_By_Name("1")
         self.page = WebPage()
         self.driver = self.page.Start_Up(CONST.URL, self.browser)
+        self.casedirpath = Path(self.reportfilepath).parent / Path("TC1")
+        self.stepsdirpath = casedirpath / Path("Steps")
 
+        if not self.casedirpath.is_dir():
+            self.casedirpath.mkdir()
+
+        if not self.stepsdirpath.is_dir():
+            self.stepsdirpath.mkdir()
 
     def test_Excute(self):
 
-        casedirpath = Path(self.reportfilepath).parent / Path("TC1")
         passdirpath = casedirpath / Path("Pass")
         faildirpath = casedirpath / Path("Fail")
-        stepsdirpath = casedirpath / Path("Steps")
-        if not casedirpath.is_dir():
-            casedirpath.mkdir()
-
-        if not stepsdirpath.is_dir():
-            stepsdirpath.mkdir()
 
         for i in self.excel.Get_Excution_DataSet("executed"):
 
             try:
-                self.page.Input(self.excel.Get_Value_By_ColName("ID", i, casedirpath), LoginPageAlias_CSS['ID_Field'])
-                self.driver.save_screenshot(str(stepsdirpath) + "/TC1_DataSet_%s_Step1.png" % str(i))
-                self.page.Input(self.excel.Get_Value_By_ColName("PW", i, casedirpath), LoginPageAlias_CSS['PW_Field'])
-                self.driver.save_screenshot(str(stepsdirpath) + "/TC1_DataSet_%s_Step2.png" % str(i))
+                self.page.Input(self.excel.Get_Value_By_ColName("ID", i, self.casedirpath), LoginPageAlias_CSS['ID_Field'])
+                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC1_DataSet_%s_Step1.png" % str(i))
+                self.page.Input(self.excel.Get_Value_By_ColName("PW", i, self.casedirpath), LoginPageAlias_CSS['PW_Field'])
+                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC1_DataSet_%s_Step2.png" % str(i))
                 self.page.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
                 time.sleep(1)
 
@@ -67,7 +68,6 @@ class TC1(unittest.TestCase):
                     WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
                     raise AssertionError("The element not contains the Assertion text")
 
-
             except Exception as msg:
                 print(msg)
 
@@ -77,7 +77,7 @@ class TC1(unittest.TestCase):
                 time.sleep(2)
                 snapshot = str(faildirpath.absolute()) + r"\TC1_fail_on_dataset_%s.png" % str(
                     int(self.excel.Get_Value_By_ColName("Data set", i)))
-                self.Generate_Report("fail",snapshot,i)
+                Generate_Report("fail", snapshot, i)
 
                 self.driver.refresh()
 
@@ -86,77 +86,18 @@ class TC1(unittest.TestCase):
                     passdirpath.mkdir()
 
                 snapshot = str(passdirpath.absolute()) + r"\TC1_pass_on_dataset_%s.png" % str(int(self.excel.Get_Value_By_ColName("Data set",i)))
-                self.Generate_Report("pass", snapshot, i)
+                Generate_Report("pass", snapshot, i)
 
                 time.sleep(2)
-                self.page.ButtonClick(r"btn_logout-btnEl")
+                self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])
                 WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
-
-    def Generate_Report(self,pass_fail,snapshotpath,rowindex):
-        #print(pass_fail)
-        #print(str(rowindex))
-        self.report.Select_Sheet_By_Name("1")
-        self.driver.save_screenshot(snapshotpath)
-        self.report.Set_Value_By_ColName(pass_fail, "Result", rowindex)
-        self.report.Set_Value_By_ColName(r"file:///" + snapshotpath, "Screen capture", rowindex)
-        self.report.Set_Value_By_ColName("done", "executed", rowindex)
-
-    def Generate_Final_Report(self):
-
-        randomfilepath = Path(self.reportfilepath).parent / Path("TC1")
-        randomfiles = list(randomfilepath.rglob('*.random'))
-        #print(randomfiles)
-
-        randomrecords = []
-
-        for l in randomfiles:
-            p = str(list(l.parts)[-1:])
-            p = p[:p.find(".random")]
-            randomrecords.append(p.split("_"))
-
-        randomrecords = list(randomrecords)
-
-        for rowindex in range(1, self.excel.Get_Row_Numbers()):
-            self.report.Select_Sheet_By_Name("result-timestamp")
-            # print(self.wtrowindex)
-            self.report.Set_Value_By_ColName(1, "Case No", self.wtrowindex)
-            self.report.Set_Value_By_ColName(rowindex, "Data set", self.wtrowindex)
-            self.report.Set_Value_By_ColName(self.excel.Get_Value_By_ColName("Expected result", rowindex),
-                                             "Expected result",
-                                             self.wtrowindex)
-            self.report.Set_Value_By_ColName(self.excel.Get_Value_By_ColName("Result", rowindex), "Result",
-                                             self.wtrowindex)
-            self.report.Set_Value_By_ColName(self.excel.Get_Value_By_ColName("Description", rowindex),
-                                             "Description",
-                                             self.wtrowindex)
-            self.report.Set_Value_By_ColName(self.excel.Get_Value_By_ColName("Screen capture", rowindex),
-                                             "Screen capture",
-                                             self.wtrowindex)
-            self.report.Set_Value_By_ColName(self.excel.Get_Value_By_ColName("executed", rowindex), "executed",
-                                             self.wtrowindex)
-            self.report.Set_Value_By_ColName(self.excel.Get_Value_By_ColName("Assertion", rowindex), "Assertion",
-                                             self.wtrowindex)
-            self.report.Set_Value_By_ColName(self.excel.Get_Value_By_ColName("ID", rowindex), "ID",
-                                             self.wtrowindex)
-            self.report.Set_Value_By_ColName(self.excel.Get_Value_By_ColName("PW", rowindex), "PW",
-                                             self.wtrowindex)
-
-            if randomrecords != '':
-                for i in range(len(randomrecords)):
-                    if int(randomrecords[i][0][-1:]) == rowindex:
-
-                        self.report.Set_Value_By_ColName("%s(%s)" % (self.excel.Get_Value_By_ColName(randomrecords[i][1], rowindex), randomrecords[i][2]), randomrecords[i][1],
-                                                         self.wtrowindex)
-
-            self.wtrowindex = self.wtrowindex + 1
-
 
     def tearDown(self):
         self.report.Save_Excel()
         self.excel = Excel(self.reportfilepath)
         self.excel.Select_Sheet_By_Name("1")
         self.driver.quit()
-        self.Generate_Final_Report()
+        Generate_Final_Report()
         self.report.Save_Excel()
 
 

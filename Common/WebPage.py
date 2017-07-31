@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
 from Common.CONST import CONST
+from Common.Alias import *
 
 class WebPage:
     def __init__(self,driver=''):
@@ -51,12 +52,12 @@ class WebPage:
     def Verification_Code(self,pwd):
         if self.driver.title == "KV Login Page":
             time.sleep(2)
-            if self.driver.find_element(By.CSS_SELECTOR,"div#viewport-message-area-body div span").text == "Please input verification code.":
+            if self.driver.find_element(By.CSS_SELECTOR, LoginPageAlias_CSS['Verfidation_Code_Text']).text == "Please input verification code.":
 
                 try:
                     Jscript = "var code =prompt('Please input the Verification Code Manually');"  \
-                               "var inbox =document.querySelector('input[name=verificationCode]');"  \
-                               "inbox.value = code;"
+                               "var inbox =document.querySelector(%s);"   \
+                               "inbox.value = code;" % LoginPageAlias_CSS['Verfidation_Code_Field']
                     self.driver.execute_script(Jscript)
                     WebDriverWait(self.driver, 20, 1).until_not(EC.alert_is_present())
 
@@ -77,7 +78,7 @@ class WebPage:
                         print(msg)
 
                 time.sleep(2)
-                self.ButtonClick(r"btn_login-btnEl")
+                self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
 
         else:
             pass
