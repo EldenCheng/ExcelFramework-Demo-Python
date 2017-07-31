@@ -1,6 +1,7 @@
 from Common.CONST import CONST
 from Common.Excel import Excel
 from Common.WebPage import WebPage
+from Common.Alias import *
 
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -47,21 +48,22 @@ class TC1(unittest.TestCase):
         for i in self.excel.Get_Excution_DataSet("executed"):
 
             try:
-                self.page.Input(self.excel.Get_Value_By_ColName("ID",i,casedirpath),"userId")
+                self.page.Input(self.excel.Get_Value_By_ColName("ID", i, casedirpath), LoginPageAlias_CSS['ID_Field'])
                 self.driver.save_screenshot(str(stepsdirpath) + "/TC1_DataSet_%s_Step1.png" % str(i))
-                self.page.Input(self.excel.Get_Value_By_ColName("PW",i,casedirpath),"password")
+                self.page.Input(self.excel.Get_Value_By_ColName("PW", i, casedirpath), LoginPageAlias_CSS['PW_Field'])
                 self.driver.save_screenshot(str(stepsdirpath) + "/TC1_DataSet_%s_Step2.png" % str(i))
-                self.page.ButtonClick(r"btn_login-btnEl")
+                self.page.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
                 time.sleep(1)
 
                 self.page.Verification_Code(self.excel.Get_Value_By_ColName("PW",i))
 
                 WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("Start"))
 
-                if self.page.Verify_Text(self.excel.Get_Value_By_ColName("Assertion",i),"LogonUserName-body",r"div#%s div"):
+                if self.page.Verify_Text(self.excel.Get_Value_By_ColName("Assertion", i),
+                                         StartPageAlias_CSS['Login_UserName'], StartPageAlias_CSS['Login_UserName_expression']):
                     print("success")
                 else:
-                    self.page.ButtonClick(r"btn_logout-btnEl")
+                    self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])
                     WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
                     raise AssertionError("The element not contains the Assertion text")
 
