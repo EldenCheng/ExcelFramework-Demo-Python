@@ -8,5 +8,10 @@ LoginPageAlias_CSS = {'ID_Field': 'userId',
 
 StartPageAlias_CSS = {'Login_UserName': 'LogonUserName-body',
                       'Login_UserName_expression': r"div#%s div",
-                      'Menu_Invention': r'label-1030',
+                      'Menu_Invitation': r'label-1030',
                       'Logout_Btn': r"btn_logout-btnEl"}
+
+InvitationPageAlias_CSS = {'Contact_Person': "contactPerson",
+                           'Phone_Number': "phoneNo",
+                           'Submit_Btn': r"btn_submit-btnEl",
+                           'Email_Error_icon': "td#txfld_companyEmail-sideErrorCell"}

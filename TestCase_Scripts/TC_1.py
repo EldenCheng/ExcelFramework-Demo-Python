@@ -27,8 +27,6 @@ class TC1(unittest.TestCase):
         self.excel = Excel()
         self.excel.Select_Sheet_By_Name("1")
         self.report = Excel(self.reportfilepath,"w")
-        self.report.Select_Sheet_By_Name("result-timestamp")
-        self.report.Select_Sheet_By_Name("1")
         self.page = WebPage()
         self.driver = self.page.Start_Up(CONST.URL, self.browser)
         self.casedirpath = Path(self.reportfilepath).parent / Path("TC1")
@@ -41,9 +39,6 @@ class TC1(unittest.TestCase):
             self.stepsdirpath.mkdir()
 
     def test_Excute(self):
-
-        passdirpath = self.casedirpath / Path("Pass")
-        faildirpath = self.casedirpath / Path("Fail")
 
         for i in self.excel.Get_Excution_DataSet("executed"):
 
@@ -62,26 +57,13 @@ class TC1(unittest.TestCase):
             except Exception as msg:
                 print(msg)
 
-                if not faildirpath.is_dir():
-                    faildirpath.mkdir()
-
-                time.sleep(2)
-                snapshot = str(faildirpath.absolute()) + r"\TC1_Dataset_%s_Step_Fail.png" \
-                                                         % str(int(self.excel.Get_Value_By_ColName("Data set", i)))
-                Generate_Report(self.driver, self.report, "fail", 1, snapshot, i)
-                # TO DO: Cut Steps captures of fail case to Fail folder
-
-                # TO DO: Generate a Log file to place error msg
+                Generate_Report(self.driver, self.excel, self.report, "fail", 1, self.casedirpath, i)
 
                 self.driver.refresh()
 
             else:
-                if not passdirpath.is_dir():
-                    passdirpath.mkdir()
 
-                snapshot = str(passdirpath.absolute()) + r"\TC1_pass_on_dataset_%s.png" \
-                                                         % str(int(self.excel.Get_Value_By_ColName("Data set", i)))
-                Generate_Report(self.driver, self.report, "fail", 1, snapshot, i)
+                Generate_Report(self.driver, self.excel, self.report, "pass", 1, self.casedirpath, i)
 
                 time.sleep(2)
                 self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])

@@ -19,7 +19,7 @@ if __name__ == '__main__':
     test_loader = unittest.TestLoader()
     excel.Select_Sheet_By_Name("summary")
     for caseno in excel.Get_Excution_DataSet("execute","Case No","yes"):
-        if excel.Get_Value_By_ColName("Script",caseno) !="to do":
+        if excel.Get_Value_By_ColName("Script", caseno) !="to do":
 
             suite.addTest(eval("TC"+str(caseno))("test_Excute",reportfilepath, "Chrome"))
 
