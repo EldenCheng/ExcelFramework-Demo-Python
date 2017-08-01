@@ -49,6 +49,25 @@ class WebPage:
         #if self.driver.find_element(By.CSS_SELECTOR, "a[href='login-flow']"):
         #    self.driver.find_element(By.CSS_SELECTOR, "a[href='login-flow']").click()
 
+    def Log_in(self, page, excel, test_case_no, data_set, case_dir_path, start_step=1):
+
+        try:
+            page.Input(excel.Get_Value_By_ColName("ID", data_set, case_dir_path), LoginPageAlias_CSS['ID_Field'])
+            self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
+                                        % (str(test_case_no), str(data_set), start_step))
+            page.Input(excel.Get_Value_By_ColName("PW", data_set, case_dir_path), LoginPageAlias_CSS['PW_Field'])
+            self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
+                                        % (str(test_case_no), str(data_set), start_step + 1))
+            page.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
+            time.sleep(1)
+
+            page.Verification_Code(excel.Get_Value_By_ColName("PW", data_set))
+
+            WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("Start"))
+
+        except Exception as msg:
+            print(msg)
+
     def Verification_Code(self,pwd):
         if self.driver.title == "KV Login Page":
             time.sleep(2)
@@ -66,7 +85,7 @@ class WebPage:
 
                 if self.browser != "Firefox":
 
-                    self.Input(pwd,"password")
+                    self.Input(pwd, LoginPageAlias_CSS['PW_Field'])
 
                 elif self.browser == "Firefox":
                     try:
