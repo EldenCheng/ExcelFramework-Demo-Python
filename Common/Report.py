@@ -22,6 +22,7 @@ def Generate_Final_Report(excel, report, reportfilepath, test_case_no):
     # print(randomfiles)
 
     randomrecords = []
+    report.Select_Sheet_By_Name("result-timestamp")
     wtrowindex = report.Get_Row_Numbers()
 
     for l in randomfiles:
@@ -30,7 +31,6 @@ def Generate_Final_Report(excel, report, reportfilepath, test_case_no):
         randomrecords.append(p.split("_"))
 
     randomrecords = list(randomrecords)
-    report.Select_Sheet_By_Name("result-timestamp")
 
     for rowindex in range(1, excel.Get_Row_Numbers()):
         # print(wtrowindex)
