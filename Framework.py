@@ -3,7 +3,8 @@ from TestCase_Scripts.TC_2 import TC2
 from TestCase_Scripts.TC_3 import TC3
 from TestCase_Scripts.TC_4 import TC4
 from Common.CONST import CONST
-from Common.Excel import Excel
+from Common.Excel_x import Excel
+from Common.Report import *
 
 import pathlib,time
 
@@ -14,7 +15,7 @@ if __name__ == '__main__':
     suite = unittest.TestSuite()
 
     excel = Excel(CONST.EXCELPATH)
-    reportfilepath = excel.Create_New_Report()
+    reportfilepath = Create_New_Report()
 
     test_loader = unittest.TestLoader()
     excel.Select_Sheet_By_Name("summary")
@@ -25,7 +26,7 @@ if __name__ == '__main__':
 
     result = unittest.TextTestRunner().run(suite)
 
-    excel = Excel(reportfilepath,"w")
+    excel = Excel(reportfilepath)
     #excel.Set_Sheet_Name("result-timestamp","result-%s" % (time.strftime("%Y-%m-%d_%H%M%S", time.localtime())))
     excel.Set_Sheet_Name("result-timestamp", "result")
     excel.Save_Excel()

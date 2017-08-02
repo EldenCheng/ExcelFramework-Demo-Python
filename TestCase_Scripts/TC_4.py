@@ -1,11 +1,12 @@
 from Common.CONST import CONST
-from Common.Excel import Excel
+from Common.Excel_x import Excel
 from Common.WebPage import WebPage
 from Common.Report import *
 from Common.Alias import *
 
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 from pathlib import Path
 
@@ -26,11 +27,11 @@ class TC4(unittest.TestCase):
 
         self.excel = Excel(CONST.EXCELPATH)
         self.excel.Select_Sheet_By_Name("4")
-        self.report = Excel(self.reportfilepath, "w")
+        self.report = Excel(self.reportfilepath)
         self.page = WebPage()
         self.driver = self.page.Start_Up(CONST.URL, self.browser)
 
-        self.casedirpath = Path(self.reportfilepath).parent / Path("TC2")
+        self.casedirpath = Path(self.reportfilepath).parent / Path("TC4")
         self.stepsdirpath = self.casedirpath / Path("Steps")
 
         if not self.casedirpath.is_dir():
@@ -45,20 +46,20 @@ class TC4(unittest.TestCase):
         for i in self.excel.Get_Excution_DataSet("executed"):
             try:
 
-                self.page.Log_in(self.page, self.excel, 4, i, self.casedirpath)
+                current_step = self.page.Log_in(self.page, self.excel, 4, i, self.casedirpath)
 
                 self.page.LabelClick(StartPageAlias_CSS['Menu_Invitation'])
 
                 WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("Invitation"))
 
-                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC4_DataSet_%s_Step3.png" % str(i))
+                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC4_DataSet_%s_Step%s.png" % (str(i), str(current_step + 1)))
 
                 self.page.Input(self.excel.Get_Value_By_ColName("Contact Person", i, self.casedirpath),
                                 InvitationPageAlias_CSS['Contact_Person'])
-                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC4_DataSet_%s_Step4.png" % str(i))
+                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC4_DataSet_%s_Step%s.png" % (str(i), str(current_step + 2)))
                 self.page.Input(self.excel.Get_Value_By_ColName("Phone Number", i, self.casedirpath),
                                 InvitationPageAlias_CSS['Phone_Number'])
-                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC4_DataSet_%s_Step5.png" % str(i))
+                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC4_DataSet_%s_Step%s.png" % (str(i), str(current_step + 3)))
 
                 self.page.ButtonClick(InvitationPageAlias_CSS['Submit_Btn'])
 

@@ -1,5 +1,5 @@
 from Common.CONST import CONST
-from Common.Excel import Excel
+from Common.Excel_x import Excel
 from Common.WebPage import WebPage
 from Common.Report import *
 from Common.Alias import *
@@ -26,7 +26,7 @@ class TC1(unittest.TestCase):
 
         self.excel = Excel()
         self.excel.Select_Sheet_By_Name("1")
-        self.report = Excel(self.reportfilepath,"w")
+        self.report = Excel(self.reportfilepath)
         self.page = WebPage()
         self.driver = self.page.Start_Up(CONST.URL, self.browser)
         self.casedirpath = Path(self.reportfilepath).parent / Path("TC1")

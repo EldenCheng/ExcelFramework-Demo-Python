@@ -115,10 +115,17 @@ class Excel:
         else:
             sheet = self.excelwtst
 
-        for c in range(self.excelrdst.ncols - 1, -1, -1):
-            if self.excelrdst.cell_value(0, c) == colname:
-                #if row < self.excelrdst.nrows:
-                sheet.write(row,c,content)
+        #if colname != "Screen capture":
+            for c in range(self.excelrdst.ncols - 1, -1, -1):
+                if self.excelrdst.cell_value(0, c) == colname:
+                    if str(content).find("HYPERLINK") == -1:
+                        sheet.write(row,c,content)
+                    else:
+                        #print(colname)
+                        #print(row)
+                        #print(content)
+                        #link = '=' + content
+                        sheet.write(row, c, xlwt.Formula('A2+B2'))
 
     def Set_Sheet_Name(self,old_name,new_name):
 

@@ -61,17 +61,21 @@ class WebPage:
             page.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
             time.sleep(1)
 
-            page.Verification_Code(excel.Get_Value_By_ColName("PW", data_set))
+            steps = page.Verification_Code(excel.Get_Value_By_ColName("PW", data_set), test_case_no, data_set,
+                                           case_dir_path, start_step + 1)
 
-            WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("Start"))
+            WebDriverWait(self.driver, 2, 0.5).until(EC.title_is("Start"))
+
+            return steps
 
         except Exception as msg:
             print(msg)
 
-    def Verification_Code(self,pwd):
+    def Verification_Code(self,pwd, test_case_no, data_set, case_dir_path, step):
         if self.driver.title == "KV Login Page":
             time.sleep(2)
-            if self.driver.find_element(By.CSS_SELECTOR, LoginPageAlias_CSS['Verfidation_Code_Text']).text == "Please input verification code.":
+            if self.driver.find_element(By.CSS_SELECTOR, "div#viewport-message-area-body div span").text \
+                    == "Please input verification code.":
 
                 try:
                     Jscript = "var code =prompt('Please input the Verification Code Manually');"  \
@@ -80,6 +84,9 @@ class WebPage:
                     self.driver.execute_script(Jscript)
                     WebDriverWait(self.driver, 20, 1).until_not(EC.alert_is_present())
 
+                    self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
+                                                % (str(test_case_no), str(data_set), step + 1))
+
                 except Exception as msg:
                     print(msg)
 
@@ -87,11 +94,17 @@ class WebPage:
 
                     self.Input(pwd, LoginPageAlias_CSS['PW_Field'])
 
+                    self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
+                                                % (str(test_case_no), str(data_set), step + 2))
+
                 elif self.browser == "Firefox":
                     try:
                         Jscript = "var inbox =document.querySelector('input[name=password]');"  \
                                    "inbox.value = %s;" % pwd
                         self.driver.execute_script(Jscript)
+
+                        self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
+                                                    % (str(test_case_no), str(data_set), step + 2))
 
                     except Exception as msg:
                         print(msg)
@@ -99,8 +112,9 @@ class WebPage:
                 time.sleep(2)
                 self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
 
+                return step + 2
         else:
-            pass
+            return step
 
     def Input(self, text, Element, Exception="input[name=%s]", driverT = ''):
         if driverT != '':

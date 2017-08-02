@@ -1,5 +1,5 @@
 from Common.CONST import CONST
-from Common.Excel import Excel
+from Common.Excel_x import Excel
 from Common.WebPage import WebPage
 from Common.Report import *
 from Common.Alias import *
@@ -20,7 +20,7 @@ class TC2(unittest.TestCase):
 
         self.excel = Excel(CONST.EXCELPATH)
         self.excel.Select_Sheet_By_Name("2")
-        self.report = Excel(self.reportfilepath, "w")
+        self.report = Excel(self.reportfilepath)
         self.page = WebPage()
         self.driver = self.page.Start_Up(CONST.URL, self.browser)
 
@@ -41,8 +41,8 @@ class TC2(unittest.TestCase):
                 self.page.Log_in(self.page, self.excel, 2, i, self.casedirpath)
 
                 if self.page.Verify_Text(self.excel.Get_Value_By_ColName("Assertion", i),
-                                         StartPageAlias_CSS['Login_UserName'],
-                                         StartPageAlias_CSS['Login_UserName_expression']):
+                                         LoginPageAlias_CSS['Login_Error_Prompt'],
+                                         LoginPageAlias_CSS['Login_Error_Prompt_expression']):
                     print("success")
                 else:
                     raise AssertionError("The element not contains the Assertion text")
