@@ -14,8 +14,8 @@ import unittest
 
 class TC3(unittest.TestCase):
     def __init__(self, testname, reportpath, browser="Firefox", Datasetrange="All"):
-
-        super(TC3, self).__init__(testname)
+        self.caseno = 3
+        exec("super(TC%d, self).__init__(%s)" % self.caseno, testname)
 
         self.reportfilepath = reportpath
         self.Rowrange = Datasetrange
@@ -24,12 +24,12 @@ class TC3(unittest.TestCase):
     def setUp(self):
 
         self.excel = Excel(CONST.EXCELPATH)
-        self.excel.Select_Sheet_By_Name("3")
+        self.excel.Select_Sheet_By_Name(str(self.caseno))
         self.report = Excel(self.reportfilepath)
         self.page = WebPage()
         self.driver = self.page.Start_Up(CONST.URL, self.browser)
 
-        self.casedirpath = Path(self.reportfilepath).parent / Path("TC3")
+        self.casedirpath = Path(self.reportfilepath).parent / Path("TC%d" % self.caseno)
         self.stepsdirpath = self.casedirpath / Path("Steps")
 
         if not self.casedirpath.is_dir():
@@ -44,7 +44,7 @@ class TC3(unittest.TestCase):
         for i in self.excel.Get_Excution_DataSet("executed"):
             try:
 
-                self.page.Log_in(self.page, self.excel, 3, i, self.casedirpath)
+                self.page.Log_in(self.page, self.excel, self.caseno, i, self.casedirpath)
 
                 if self.page.Verify_Text(self.excel.Get_Value_By_ColName("Assertion", i),
                                          LoginPageAlias_CSS['Login_Error_Prompt']):
@@ -56,21 +56,21 @@ class TC3(unittest.TestCase):
             except Exception as msg:
                 print(msg)
 
-                Generate_Report(self.driver, self.excel, self.report, "fail", 3, self.casedirpath, i)
+                Generate_Report(self.driver, self.excel, self.report, "fail", self.caseno, self.casedirpath, i)
 
                 self.driver.refresh()
 
             else:
 
-                Generate_Report(self.driver, self.excel, self.report, "pass", 3, self.casedirpath, i)
+                Generate_Report(self.driver, self.excel, self.report, "pass", self.caseno, self.casedirpath, i)
 
                 self.driver.refresh()
 
     def tearDown(self):
         self.report.Save_Excel()
         self.excel = Excel(self.reportfilepath)
-        self.excel.Select_Sheet_By_Name("3")
+        self.excel.Select_Sheet_By_Name(str(self.caseno))
         self.driver.quit()
         # print(self.excel)
-        Generate_Final_Report(self.excel, self.report, self.reportfilepath, 3)
+        Generate_Final_Report(self.excel, self.report, self.caseno)
         self.report.Save_Excel()
