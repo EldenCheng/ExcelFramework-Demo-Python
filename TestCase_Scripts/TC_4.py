@@ -17,7 +17,7 @@ import unittest
 class TC4(unittest.TestCase):
     def __init__(self, testname, reportpath, browser="Firefox", Datasetrange="All"):
         self.caseno = 4
-        exec("super(TC%d, self).__init__(%s)" % self.caseno, testname)
+        exec("super(TC%d, self).__init__(testname)" % self.caseno)
 
         self.reportfilepath = reportpath
         self.Rowrange = Datasetrange

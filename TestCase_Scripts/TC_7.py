@@ -16,7 +16,7 @@ import unittest
 class TC7(unittest.TestCase):
     def __init__(self, testname, reportpath, browser="Firefox", Datasetrange="All"):
         self.caseno = 7
-        exec("super(TC%d, self).__init__(%s)" % self.caseno, testname)
+        exec("super(TC%d, self).__init__(testname)" % self.caseno)
 
         self.reportfilepath = reportpath
         self.Rowrange = Datasetrange
