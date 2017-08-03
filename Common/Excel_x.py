@@ -26,12 +26,13 @@ class Excel():
 
         for i in range (1, rows + 1):
             if self.excelst.cell(row=i,column=1).value is not None:
+                print(self.excelst.cell(row=i,column=1).value)
                 if i != rows:
                     continue
                 else:
                     return i
             else:
-                return i
+                return i - 1
 
     def Get_All_Values_By_ColName(self, colname):
 
