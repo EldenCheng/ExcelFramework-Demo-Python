@@ -169,8 +169,7 @@ class WebPage:
             randomvalue = random.choice(elements)
             index = elements.index(randomvalue)
             labels = self.driver.find_elements(By.CSS_SELECTOR, Exception.replace("input", "label"))
-            #print(labels[index].text)
-            file = Path(path) / Path("%d_%s_%s.random" % (row, colname, str(labels[index + 1].text)))
+            file = Path(path) / Path("%d_%s_%s.random" % (row, colname, labels[index * 2 + 1].text))
             file.touch()
             randomvalue.click()
 
