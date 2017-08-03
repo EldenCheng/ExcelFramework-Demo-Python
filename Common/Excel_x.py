@@ -26,7 +26,7 @@ class Excel():
 
         for i in range (1, rows + 1):
             if self.excelst.cell(row=i,column=1).value is not None:
-                print(self.excelst.cell(row=i,column=1).value)
+                #print(self.excelst.cell(row=i,column=1).value)
                 if i != rows:
                     continue
                 else:
@@ -38,7 +38,7 @@ class Excel():
 
         values = []
         for c in range(1, self.excelst.max_column + 1):
-            if self.excelst.cell(row=1, column=c).value == colname:
+            if str(self.excelst.cell(row=1, column=c).value).lower() == colname.lower():
                 for r in range(2, self.Get_Row_Numbers() + 1):
                     if self.excelst.cell(row=r, column=c).value is not None:
                         values.append(self.excelst.cell(row=r, column=c).value)
@@ -47,7 +47,7 @@ class Excel():
     def Get_Value_By_ColName(self, colname, row, path = ''):
 
         for c in range(1, self.excelst.max_column + 1):
-            if self.excelst.cell(row=1, column=c).value == colname:
+            if str(self.excelst.cell(row=1, column=c).value).lower() == colname.lower():
                 if row <= self.excelst.max_row:
                     value = self.excelst.cell(row=row + 1, column=c).value
 
@@ -76,7 +76,7 @@ class Excel():
             sheet = self.excelst
 
             for c in range(1, sheet.max_column + 1):
-                if sheet.cell(row=1, column=c).value == colname:
+                if str(sheet.cell(row=1, column=c).value).lower() == colname.lower():
                     if row <= sheet.max_row:
                         sheet.cell(row=row + 1, column=c).value = content
                         break
@@ -92,9 +92,9 @@ class Excel():
     def Get_Excution_DataSet(self,colname,dataset_name="Data set",keyword="Not Yet"):
         DaList = []
         for c in range(1, self.excelst.max_column + 1):
-            if self.excelst.cell(row=1, column=c).value == colname:
+            if str(self.excelst.cell(row=1, column=c).value).lower() == colname.lower():
                 for r in range(1,self.excelst.max_row + 1):
-                    if self.excelst.cell(row=r + 1, column=c).value == keyword:
+                    if str(self.excelst.cell(row=r + 1, column=c).value).lower() == keyword.lower():
                         if self.Get_Value_By_ColName(dataset_name,r) != '':
                             #print("The value of cell(%d,%d) is %r" % (r,c, self.Get_Value_By_ColName(dataset_name,r)))
                             DaList.append(int(self.Get_Value_By_ColName(dataset_name,r)))
