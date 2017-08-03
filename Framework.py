@@ -1,7 +1,4 @@
-from TestCase_Scripts.TC_1 import TC1
-from TestCase_Scripts.TC_2 import TC2
-from TestCase_Scripts.TC_3 import TC3
-from TestCase_Scripts.TC_4 import TC4
+
 from Common.CONST import CONST
 from Common.Excel_x import Excel
 from Common.Report import *
@@ -20,7 +17,8 @@ if __name__ == '__main__':
     test_loader = unittest.TestLoader()
     excel.Select_Sheet_By_Name("summary")
     for caseno in excel.Get_Excution_DataSet("execute","Case No","yes"):
-        if excel.Get_Value_By_ColName("Script", caseno) !="to do":
+        if excel.Get_Value_By_ColName("Script", caseno).lower() != "to do":
+            exec("from TestCase_Scripts.TC_%d import TC%d" % (caseno, caseno))
 
             suite.addTest(eval("TC"+str(caseno))("test_Excute",reportfilepath, "Chrome"))
 
