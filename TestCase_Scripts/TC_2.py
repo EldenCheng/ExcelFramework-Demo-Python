@@ -41,8 +41,7 @@ class TC2(unittest.TestCase):
                 self.page.Log_in(self.page, self.excel, 2, i, self.casedirpath)
 
                 if self.page.Verify_Text(self.excel.Get_Value_By_ColName("Assertion", i),
-                                         LoginPageAlias_CSS['Login_Error_Prompt'],
-                                         LoginPageAlias_CSS['Login_Error_Prompt_expression']):
+                                         LoginPageAlias_CSS['Login_Error_Prompt']):
                     print("success")
                 else:
                     raise AssertionError("The element not contains the Assertion text")
