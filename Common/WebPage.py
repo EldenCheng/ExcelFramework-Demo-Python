@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from pathlib import Path
 import random
 import time
 from Common.CONST import CONST
@@ -151,21 +152,28 @@ class WebPage:
         except Exception as msg:
             print(msg)
 
-    def VideoButtonClick(self, Element, Exception):
+    def VideoButtonClick(self, Element, Exception, path, row, colname):
 
         elements = self.driver.find_elements(By.CSS_SELECTOR, Exception)
 
-        for e in elements:
-            print(e.get_attribute("id"))
+        #for e in elements:
+        #    print(e.get_attribute("id"))
 
-        print(POMaintenancePageAlias_CSS[Element])
+        #print(POMaintenancePageAlias_CSS[Element])
 
-        print(random.choice(elements).get_attribute("id"))
+        #print(random.choice(elements).get_attribute("id"))
 
-        if Element.lower() != "RandomIndex":
+        if Element.lower() != "randomindex":
             elements[POMaintenancePageAlias_CSS[Element]].click()
         else:
-            random.choice(elements).click()
+            randomvalue = random.choice(elements)
+            index = elements.index(randomvalue)
+            labels = self.driver.find_elements(By.CSS_SELECTOR, Exception.replace("input", "label"))
+            #print(labels[index].text)
+            file = Path(path) / Path("%d_%s_%s.random" % (row, colname, str(labels[index + 1].text)))
+            file.touch()
+            randomvalue.click()
+
 
     def Verify_Text(self,text,Exception,driverT = ''):
 
