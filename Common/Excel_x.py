@@ -51,16 +51,15 @@ class Excel():
                 if row <= self.excelst.max_row:
                     value = self.excelst.cell(row=row + 1, column=c).value
 
-                    if str(value).find("random") != -1 and path !="":
+                    if str(value).find("random") != -1 and path != "" and str(value).lower() != "randomindex":
                         excelTemp = Excel(CONST.EXCELPATH)
-                        #excelTemp = Excel(r"..\TestCaseData\Kerry_data_2c.xlsx")
                         excelTemp.Select_Sheet_By_Name("data")
                         randomlist = excelTemp.Get_All_Values_By_ColName(value)
-                        print(randomlist)
                         randomvalue = random.choice(randomlist)
                         file = Path(path) / Path("%d_%s_%s.random" % (row, colname, str(randomvalue)))
                         file.touch()
                         #print(str(file))
+                        #self.excelst.cell(row=row + 1, column=c).value = "%s(%s)" % (str(value), str(randomvalue))
                         return randomvalue
                     else:
                         return value
