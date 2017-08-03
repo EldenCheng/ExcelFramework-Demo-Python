@@ -40,7 +40,6 @@ class TC4(unittest.TestCase):
         if not self.stepsdirpath.is_dir():
             self.stepsdirpath.mkdir()
 
-
     def test_Excute(self):
 
         for i in self.excel.Get_Excution_DataSet("executed"):
@@ -55,10 +54,10 @@ class TC4(unittest.TestCase):
                 self.driver.save_screenshot(str(self.stepsdirpath) + "/TC4_DataSet_%s_Step%s.png" % (str(i), str(current_step + 1)))
 
                 self.page.Input(self.excel.Get_Value_By_ColName("Contact Person", i, self.casedirpath),
-                                InvitationPageAlias_CSS['Contact_Person'])
+                                InvitationPageAlias_CSS['Contact Person'])
                 self.driver.save_screenshot(str(self.stepsdirpath) + "/TC4_DataSet_%s_Step%s.png" % (str(i), str(current_step + 2)))
                 self.page.Input(self.excel.Get_Value_By_ColName("Phone Number", i, self.casedirpath),
-                                InvitationPageAlias_CSS['Phone_Number'])
+                                InvitationPageAlias_CSS['Phone Number'])
                 self.driver.save_screenshot(str(self.stepsdirpath) + "/TC4_DataSet_%s_Step%s.png" % (str(i), str(current_step + 3)))
 
                 self.page.ButtonClick(InvitationPageAlias_CSS['Submit_Btn'])
