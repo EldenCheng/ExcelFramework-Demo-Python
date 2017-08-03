@@ -59,7 +59,7 @@ def Generate_Report(driver, excel, report, pass_fail, test_case_no, casedirpath,
     except Exception as msg:
         print(msg)
 
-def Generate_Final_Report(excel, report, reportfilepath, test_case_no):
+def Generate_Final_Report(excel, report, test_case_no):
 
     report.Select_Sheet_By_Name("result-timestamp")
     wtrowindex = report.Get_Row_Numbers()
