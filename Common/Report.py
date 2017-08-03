@@ -9,7 +9,7 @@ def Generate_Report(driver, excel, report, pass_fail, test_case_no, casedirpath,
     # print(str(rowindex))
 
     try:
-        if pass_fail == "pass":
+        if pass_fail.lower() == "pass":
             passdirpath = casedirpath / Path("Pass")
             if not passdirpath.is_dir():
                 passdirpath.mkdir()
@@ -19,7 +19,7 @@ def Generate_Report(driver, excel, report, pass_fail, test_case_no, casedirpath,
             snapshotpath = str(passdirpath.absolute()) + "\\" + capturename
             link = r'=HYPERLINK("%s","%s")' % (snapshotpath, capturename)
 
-        elif pass_fail == "fail":
+        elif pass_fail.lower() == "fail":
             faildirpath = casedirpath / Path("Fail")
             if not faildirpath.is_dir():
                 faildirpath.mkdir()
@@ -71,9 +71,9 @@ def Generate_Final_Report(excel, report, reportfilepath, test_case_no):
         report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Expected result", rowindex), "Expected result", wtrowindex)
         res = excel.Get_Value_By_ColName("Result", rowindex)
         exe = excel.Get_Value_By_ColName("executed", rowindex)
-        if exe != 'Skip':
+        if exe.lower() != "skip":
             report.Set_Value_By_ColName(res, "Result", wtrowindex)
-        elif exe == "Skip":
+        elif exe.lower() == "skip":
             report.Set_Value_By_ColName("Skipped", "Result", wtrowindex)
         report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Description", rowindex),"Description", wtrowindex)
         report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Screen capture", rowindex), "Screen capture",
