@@ -46,8 +46,7 @@ class TC1(unittest.TestCase):
                 self.page.Log_in(self.page, self.excel, 1, i, self.casedirpath)
 
                 if self.page.Verify_Text(self.excel.Get_Value_By_ColName("Assertion", i),
-                                         StartPageAlias_CSS['Login_UserName'],
-                                         StartPageAlias_CSS['Login_UserName_expression']):
+                                         StartPageAlias_CSS['Login_UserName']):
                     print("success")
                 else:
                     self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])
