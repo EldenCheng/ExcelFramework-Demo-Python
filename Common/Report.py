@@ -5,9 +5,6 @@ import time,shutil
 
 
 def Generate_Report(driver, excel, report, pass_fail, test_case_no, casedirpath, rowindex):
-    # print(pass_fail)
-    # print(str(rowindex))
-
     try:
         if pass_fail.lower() == "pass":
             passdirpath = casedirpath / Path("Pass")
@@ -28,6 +25,11 @@ def Generate_Report(driver, excel, report, pass_fail, test_case_no, casedirpath,
                           % (str(test_case_no), str(int(excel.Get_Value_By_ColName("Data set", rowindex))))
             snapshotpath = str(faildirpath.absolute()) + "\\" + capturename
             link = r'=HYPERLINK("%s","%s")' % (snapshotpath, capturename)
+
+            stepspath = Path(casedirpath) / Path("Steps")
+            stepsfiles = list(stepspath.rglob('TC%s_Dataset_%s_Step*.png' % (str(test_case_no), str(rowindex))))
+            for s in stepsfiles:
+                shutil.copy(str(s), faildirpath)
 
         report.Select_Sheet_By_Name(str(test_case_no))
         driver.save_screenshot(snapshotpath)
@@ -51,11 +53,6 @@ def Generate_Report(driver, excel, report, pass_fail, test_case_no, casedirpath,
                     report.Set_Value_By_ColName("%s(%s)" % (
                         excel.Get_Value_By_ColName(randomrecords[i][1], rowindex), randomrecords[i][2]),
                                                 randomrecords[i][1], rowindex)
-
-        # TO DO: Cut Steps captures of fail case to Fail folder
-
-        # TO DO: Generate a Log file to place error msg
-
     except Exception as msg:
         print(msg)
 
