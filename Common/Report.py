@@ -1,4 +1,4 @@
-from Common.CONST import CONST
+from Common.CONST_j import CONST
 from pathlib import Path
 
 import time,shutil
@@ -85,7 +85,7 @@ def Generate_Final_Report(excel, report, test_case_no):
 
         wtrowindex = wtrowindex + 1
 
-def Create_New_Report(folderpath= r".\TestReport" ):
+def Create_New_Report(folderpath= CONST.TESTREPORTPATH ):
     otime = time.strftime("%Y-%m-%d_%H%M%S", time.localtime())
     reprotfolderpath = Path(folderpath) / Path(otime)
     if reprotfolderpath.is_dir():

@@ -1,10 +1,10 @@
+# coding: utf-8
 
-from Common.CONST import CONST
+from Common.CONST_j import CONST
 from Common.Excel_x import Excel
 from Common.Report import *
 
-import pathlib,time
-
+import sys
 import unittest
 
 if __name__ == '__main__':
@@ -20,7 +20,7 @@ if __name__ == '__main__':
         if excel.Get_Value_By_ColName("Script", caseno).lower() != "to do":
             exec("from TestCase_Scripts.TC_%d import TC%d" % (caseno, caseno))
 
-            suite.addTest(eval("TC"+str(caseno))("test_Excute",reportfilepath, "Chrome"))
+            suite.addTest(eval("TC"+str(caseno))("test_Excute",reportfilepath, CONST.BROWSER))
 
     result = unittest.TextTestRunner().run(suite)
 
@@ -28,5 +28,5 @@ if __name__ == '__main__':
     #excel.Set_Sheet_Name("result-timestamp","result-%s" % (time.strftime("%Y-%m-%d_%H%M%S", time.localtime())))
     excel.Set_Sheet_Name("result-timestamp", "result")
     excel.Save_Excel()
-    #sys.exit(not result.wasSuccessful())
+    sys.exit(not result.wasSuccessful())
 

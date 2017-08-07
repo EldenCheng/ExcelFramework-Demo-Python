@@ -1,4 +1,4 @@
-from Common.CONST import CONST
+from Common.CONST_j import CONST
 from Common.Excel_x import Excel
 from Common.WebPage import WebPage
 from Common.Report import *

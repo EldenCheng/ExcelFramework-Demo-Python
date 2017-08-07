@@ -1,4 +1,4 @@
-from Common.CONST import CONST
+from Common.CONST_j import CONST
 from Common.Excel_x import Excel
 from Common.WebPage import WebPage
 from Common.Report import *
@@ -50,7 +50,7 @@ class TC7(unittest.TestCase):
                 self.driver.save_screenshot(
                     str(self.stepsdirpath) + "/TC%d_DataSet_%d_Step%d.png" % (self.caseno, i, current_step + 1))
 
-                self.page.VideoButtonClick(self.excel.Get_Value_By_ColName("Order Type", i),
+                self.page.RadioButtonClick(self.excel.Get_Value_By_ColName("Order Type", i),
                                            POMaintenancePageAlias_CSS['Order Type'], self.casedirpath, i, "Order Type")
 
                 self.driver.save_screenshot(

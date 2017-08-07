@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys
 from pathlib import Path
 import random
 import time
-from Common.CONST import CONST
+from Common.CONST_j import CONST
 from Common.Alias import *
 
 class WebPage:
@@ -39,8 +39,11 @@ class WebPage:
             time.sleep(5)
 
         if self.driver.title != "KV Login Page":
-            self.By_Pass_External_Page()
-            WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
+            try:
+                self.By_Pass_External_Page()
+                WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
+            except Exception as msg:
+                raise Exception("The Exception page cannot be skipped or cannot access the website")
         else:
             time.sleep(5)
 
@@ -152,7 +155,7 @@ class WebPage:
         except Exception as msg:
             print(msg)
 
-    def VideoButtonClick(self, Element, Exception, path, row, colname):
+    def RadioButtonClick(self, Element, Exception, path, row, colname):
 
         elements = self.driver.find_elements(By.CSS_SELECTOR, Exception)
 
