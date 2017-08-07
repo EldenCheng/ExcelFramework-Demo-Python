@@ -48,13 +48,13 @@ class TC7(unittest.TestCase):
                 self.page.LabelClick(StartPageAlias_CSS['Menu-PO Maintenance'])
 
                 self.driver.save_screenshot(
-                    str(self.stepsdirpath) + "/TC%d_DataSet_%d_Step%d.png" % (self.caseno, i, current_step + 1))
+                    str(self.stepsdirpath) + "/TC%d_DataSet_%d_Step_%d.png" % (self.caseno, i, current_step + 1))
 
                 self.page.RadioButtonClick(self.excel.Get_Value_By_ColName("Order Type", i),
                                            POMaintenancePageAlias_CSS['Order Type'], self.casedirpath, i, "Order Type")
 
                 self.driver.save_screenshot(
-                    str(self.stepsdirpath) + "/TC%d_DataSet_%d_Step%d.png" % (self.caseno, i, current_step + 2))
+                    str(self.stepsdirpath) + "/TC%d_DataSet_%d_Step_%d.png" % (self.caseno, i, current_step + 2))
 
             except Exception as msg:
                 print(msg)

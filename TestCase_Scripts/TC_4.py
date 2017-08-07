@@ -50,16 +50,16 @@ class TC4(unittest.TestCase):
 
                 WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("Invitation"))
 
-                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC%d_DataSet_%d_Step%d.png"
+                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC%d_DataSet_%d_Step_%d.png"
                                             % (self.caseno, i, current_step + 1))
 
                 self.page.Input(self.excel.Get_Value_By_ColName("Contact Person", i, self.casedirpath),
                                 InvitationPageAlias_CSS['Contact Person'])
-                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC%d_DataSet_%d_Step%d.png"
+                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC%d_DataSet_%d_Step_%d.png"
                                             % (self.caseno, i, current_step + 2))
                 self.page.Input(self.excel.Get_Value_By_ColName("Phone Number", i, self.casedirpath),
                                 InvitationPageAlias_CSS['Phone Number'])
-                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC%d_DataSet_%d_Step%d.png"
+                self.driver.save_screenshot(str(self.stepsdirpath) + "/TC%d_DataSet_%d_Step_%d.png"
                                             % (self.caseno, i, current_step + 3))
 
                 self.page.ButtonClick(InvitationPageAlias_CSS['Submit_Btn'])

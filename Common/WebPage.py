@@ -29,14 +29,16 @@ class WebPage:
             print("Not support this kind of driver")
 
         self.browser = browser
+        try:
+            self.driver.get(url)
+            self.driver.implicitly_wait(5)
 
-        self.driver.get(url)
-        self.driver.implicitly_wait(5)
-
-        if self.browser != "Firefox":
-            self.driver.maximize_window()
-        else:
-            time.sleep(5)
+            if self.browser != "Firefox":
+                self.driver.maximize_window()
+            else:
+                time.sleep(5)
+        except Exception as msg:
+            print(msg)
 
         if self.driver.title != "KV Login Page":
             try:
@@ -50,16 +52,20 @@ class WebPage:
         return self.driver
 
     def By_Pass_External_Page(self):
-        WebDriverWait(self.driver,5,0.5).until(lambda x: x.find_element_by_css_selector("a[href='login-flow']")).click()
+        try:
+            WebDriverWait(self.driver, 5, 0.5).until(lambda x:
+                                                     x.find_element_by_css_selector("a[href='login-flow']")).click()
+        except Exception as msg:
+            print(msg)
 
     def Log_in(self, page, excel, test_case_no, data_set, case_dir_path, start_step=1):
 
         try:
             page.Input(excel.Get_Value_By_ColName("ID", data_set, case_dir_path), LoginPageAlias_CSS['ID_Field'])
-            self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step%d.png"
+            self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
                                         % (str(test_case_no), str(data_set), start_step))
             page.Input(excel.Get_Value_By_ColName("PW", data_set, case_dir_path), LoginPageAlias_CSS['PW_Field'])
-            self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step%d.png"
+            self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
                                         % (str(test_case_no), str(data_set), start_step + 1))
             page.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
             time.sleep(1)
@@ -77,19 +83,17 @@ class WebPage:
     def Verification_Code(self,pwd, test_case_no, data_set, case_dir_path, step):
         if self.driver.title == "KV Login Page":
             time.sleep(2)
+
             if self.driver.find_element(By.CSS_SELECTOR, LoginPageAlias_CSS['Login_Error_Prompt']).text \
                     == "Please input verification code.":
-
                 try:
                     Jscript = "var code =prompt('Please input the Verification Code Manually');"  \
                                "var inbox =document.querySelector(%s);"   \
                                "inbox.value = code;" % LoginPageAlias_CSS['Verfidation_Code_Field']
                     self.driver.execute_script(Jscript)
                     WebDriverWait(self.driver, 20, 1).until_not(EC.alert_is_present())
-
-                    self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step%d.png"
+                    self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
                                                 % (str(test_case_no), str(data_set), step + 1))
-
                 except Exception as msg:
                     print(msg)
 
@@ -97,7 +101,7 @@ class WebPage:
 
                     self.Input(pwd, LoginPageAlias_CSS['PW_Field'])
 
-                    self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step%d.png"
+                    self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
                                                 % (str(test_case_no), str(data_set), step + 2))
 
                 elif self.browser == "Firefox":
@@ -106,7 +110,7 @@ class WebPage:
                                    "inbox.value = %s;" % pwd
                         self.driver.execute_script(Jscript)
 
-                        self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step%d.png"
+                        self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
                                                     % (str(test_case_no), str(data_set), step + 2))
 
                     except Exception as msg:
@@ -157,24 +161,21 @@ class WebPage:
 
     def RadioButtonClick(self, Element, Exception, path, row, colname):
 
-        elements = self.driver.find_elements(By.CSS_SELECTOR, Exception)
+        try:
+            elements = self.driver.find_elements(By.CSS_SELECTOR, Exception)
 
-        #for e in elements:
-        #    print(e.get_attribute("id"))
+            if Element.lower() != "randomindex":
+                elements[POMaintenancePageAlias_CSS[Element]].click()
+            else:
+                randomvalue = random.choice(elements)
+                index = elements.index(randomvalue)
+                labels = self.driver.find_elements(By.CSS_SELECTOR, Exception.replace("input", "label"))
+                file = Path(path) / Path("%d_%s_%s.random" % (row, colname, labels[index * 2 + 1].text))
+                file.touch()
+                randomvalue.click()
 
-        #print(POMaintenancePageAlias_CSS[Element])
-
-        #print(random.choice(elements).get_attribute("id"))
-
-        if Element.lower() != "randomindex":
-            elements[POMaintenancePageAlias_CSS[Element]].click()
-        else:
-            randomvalue = random.choice(elements)
-            index = elements.index(randomvalue)
-            labels = self.driver.find_elements(By.CSS_SELECTOR, Exception.replace("input", "label"))
-            file = Path(path) / Path("%d_%s_%s.random" % (row, colname, labels[index * 2 + 1].text))
-            file.touch()
-            randomvalue.click()
+        except Exception as msg:
+            print(msg)
 
 
     def Verify_Text(self,text,Exception,driverT = ''):
@@ -184,10 +185,11 @@ class WebPage:
         else:
             driver = self.driver
 
-        element_text = driver.find_element(By.CSS_SELECTOR, Exception).text
-        element_text = ''.join(element_text.split())
-        text = ''.join(text.split())
         try:
+            element_text = driver.find_element(By.CSS_SELECTOR, Exception).text
+            element_text = ''.join(element_text.split())
+            text = ''.join(text.split())
+
             if element_text[-len(text):] == text:
                 print("The text of the element is equals %s" % text)
                 return True
@@ -196,4 +198,4 @@ class WebPage:
                 return False
         except Exception as msg:
             print(msg)
-            return False
+

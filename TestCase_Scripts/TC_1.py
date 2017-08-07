@@ -44,23 +44,24 @@ class TC1(unittest.TestCase):
         for i in self.excel.Get_Excution_DataSet("executed"):
 
             try:
-                self.page.Log_in(self.page, self.excel, self.caseno, i, self.casedirpath)
+                if i != '':
+                    self.page.Log_in(self.page, self.excel, self.caseno, i, self.casedirpath)
 
-                if self.page.Verify_Text(self.excel.Get_Value_By_ColName("Assertion", i),
-                                         StartPageAlias_CSS['Login_UserName']):
-                    print("success")
-                else:
-                    self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])
-                    WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
-                    raise AssertionError("The element not contains the Assertion text")
+                    if self.page.Verify_Text(self.excel.Get_Value_By_ColName("Assertion", i),
+                                             StartPageAlias_CSS['Login_UserName']):
+                        print("success")
+                    else:
+                        raise AssertionError("The element not contains the Assertion text")
 
             except Exception as msg:
                 print(msg)
 
                 Generate_Report(self.driver, self.excel, self.report, "fail", self.caseno, self.casedirpath, i)
-
-                self.driver.refresh()
-
+                if self.driver.title == "Start":
+                    self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])
+                    WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
+                elif self.driver.title == "KV Login Page":
+                    self.driver.refresh()
             else:
 
                 Generate_Report(self.driver, self.excel, self.report, "pass", self.caseno, self.casedirpath, i)

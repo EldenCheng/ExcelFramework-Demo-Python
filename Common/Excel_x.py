@@ -17,8 +17,11 @@ class Excel():
             print(msg)
 
     def Select_Sheet_By_Name(self, name):
-        self.excelst = self.excelwb.get_sheet_by_name(name)
-        return self.excelst
+        if name in self.excelwb.sheetnames:
+            self.excelst = self.excelwb.get_sheet_by_name(name)
+            return self.excelst
+        else:
+            raise Exception("Cannot find the given sheet name" % name)
 
     def Get_Row_Numbers(self):
 
@@ -42,7 +45,10 @@ class Excel():
                 for r in range(2, self.Get_Row_Numbers() + 1):
                     if self.excelst.cell(row=r, column=c).value is not None:
                         values.append(self.excelst.cell(row=r, column=c).value)
-        return values
+        if len(values) != 0:
+            return values
+        else:
+            raise Exception("Cannot get any value by using the given column name %s" % colname)
 
     def Get_Value_By_ColName(self, colname, row, path = ''):
 
@@ -66,7 +72,7 @@ class Excel():
                 else:
                     raise Exception("Given row number is larger than the rows of the sheet")
         else:
-            raise Exception("Cannot find any value")
+            raise Exception("Cannot find the given column name")
 
     def Set_Value_By_ColName(self, content, colname, row, sheetpassed=''):
         if sheetpassed != '':
@@ -82,11 +88,13 @@ class Excel():
                     else:
                         raise Exception("Given row number is larger than the rows of the sheet")
             else:
-                raise Exception("Cannot find the colname")
+                raise Exception("Cannot find the column name")
 
     def Set_Sheet_Name(self,old_name,new_name):
-
-        self.excelwb.get_sheet_by_name(old_name).title = new_name
+        if old_name in self.excelwb.sheetnames:
+            self.excelwb.get_sheet_by_name(old_name).title = new_name
+        else:
+            raise Exception("Cannot find the given sheet name" % old_name)
 
     def Get_Excution_DataSet(self,colname,dataset_name="Data set",keyword="Not Yet"):
         DaList = []
@@ -97,7 +105,10 @@ class Excel():
                         if self.Get_Value_By_ColName(dataset_name,r) != '':
                             #print("The value of cell(%d,%d) is %r" % (r,c, self.Get_Value_By_ColName(dataset_name,r)))
                             DaList.append(int(self.Get_Value_By_ColName(dataset_name,r)))
-        return DaList
+        if len(DaList) != 0:
+            return DaList
+        else:
+            raise Exception("Not found any executable %s by using the %s keyword" % (dataset_name, keyword))
 
     def Save_Excel(self,path=''):
         if path == '':
@@ -105,5 +116,8 @@ class Excel():
         else:
             savepath = path
 
-        self.excelwb.save(savepath)
+        try:
+            self.excelwb.save(savepath)
+        except Exception as msg:
+            print(msg)
 
