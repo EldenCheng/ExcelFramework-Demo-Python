@@ -44,7 +44,14 @@ class TC3(unittest.TestCase):
         for i in self.excel.Get_Excution_DataSet("executed"):
             try:
 
-                self.page.Log_in(self.page, self.excel, self.caseno, i, self.casedirpath)
+                bro = self.excel.Get_Value_By_ColName("Browser", i)
+                if bro is not None:
+                    self.browser = bro
+
+                self.page = WebPage()
+                self.driver = self.page.Start_Up(CONST.URL, self.browser)
+
+                self.page.Log_in(self.excel, self.caseno, i, self.casedirpath)
 
                 if self.page.Verify_Text(self.excel.Get_Value_By_ColName("Assertion", i),
                                          LoginPageAlias_CSS['Login_Error_Prompt']):
@@ -58,19 +65,18 @@ class TC3(unittest.TestCase):
 
                 Generate_Report(self.driver, self.excel, self.report, "fail", self.caseno, self.casedirpath, i)
 
-                self.driver.refresh()
+                self.driver.quit()
 
             else:
 
                 Generate_Report(self.driver, self.excel, self.report, "pass", self.caseno, self.casedirpath, i)
 
-                self.driver.refresh()
+                self.driver.quit()
 
     def tearDown(self):
         self.report.Save_Excel()
         self.excel = Excel(self.reportfilepath)
         self.excel.Select_Sheet_By_Name(str(self.caseno))
-        self.driver.quit()
         # print(self.excel)
         Generate_Final_Report(self.excel, self.report, self.caseno)
         self.report.Save_Excel()

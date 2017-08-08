@@ -19,8 +19,7 @@ if __name__ == '__main__':
     for caseno in excel.Get_Excution_DataSet("execute","Case No","yes"):
         if excel.Get_Value_By_ColName("Script", caseno).lower() != "to do":
             exec("from TestCase_Scripts.TC_%d import TC%d" % (caseno, caseno))
-
-            suite.addTest(eval("TC"+str(caseno))("test_Excute",reportfilepath, CONST.BROWSER))
+            suite.addTest(eval("TC"+str(caseno))("test_Excute", reportfilepath))
 
     result = unittest.TextTestRunner().run(suite)
 

@@ -63,15 +63,26 @@ def Generate_Final_Report(excel, report, test_case_no):
 
     for rowindex in range(1, excel.Get_Row_Numbers()):
         # print(wtrowindex)
-        report.Set_Value_By_ColName(test_case_no, "Case No", wtrowindex)
-        report.Set_Value_By_ColName(rowindex, "Data set", wtrowindex)
-        report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Expected result", rowindex), "Expected result", wtrowindex)
+        bro = excel.Get_Value_By_ColName("Browser", rowindex)
         res = excel.Get_Value_By_ColName("Result", rowindex)
         exe = excel.Get_Value_By_ColName("executed", rowindex)
-        if exe.lower() != "skip":
-            report.Set_Value_By_ColName(res, "Result", wtrowindex)
+
+        report.Set_Value_By_ColName(test_case_no, "Case No", wtrowindex)
+        report.Set_Value_By_ColName(rowindex, "Data set", wtrowindex)
+        report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Expected result", rowindex), "Expected result",
+                                    wtrowindex)
+        if res is None:
+            report.Set_Value_By_ColName("Skipped", "Result", wtrowindex)
+            report.Set_Value_By_ColName("Skipped", "Browser", wtrowindex)
         elif exe.lower() == "skip":
             report.Set_Value_By_ColName("Skipped", "Result", wtrowindex)
+            report.Set_Value_By_ColName("Skipped", "Browser", wtrowindex)
+        else:
+            report.Set_Value_By_ColName(res, "Result", wtrowindex)
+            if bro is not None:
+                report.Set_Value_By_ColName(bro, "Browser", wtrowindex)
+            else:
+                report.Set_Value_By_ColName("Chrome", "Browser", wtrowindex)
         report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Description", rowindex),"Description", wtrowindex)
         report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Screen capture", rowindex), "Screen capture",
                                     wtrowindex)

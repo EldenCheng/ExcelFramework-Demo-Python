@@ -14,7 +14,7 @@ import unittest
 
 
 class TC1(unittest.TestCase):
-    def __init__(self, testname, reportpath, browser="Firefox", Datasetrange="All"):
+    def __init__(self, testname, reportpath, browser="Chrome", Datasetrange="All"):
 
         self.caseno = 1
         exec("super(TC%d, self).__init__(testname)" % self.caseno)
@@ -28,8 +28,6 @@ class TC1(unittest.TestCase):
         self.excel = Excel()
         self.excel.Select_Sheet_By_Name(str(self.caseno))
         self.report = Excel(self.reportfilepath)
-        self.page = WebPage()
-        self.driver = self.page.Start_Up(CONST.URL, self.browser)
         self.casedirpath = Path(self.reportfilepath).parent / Path("TC%d" % self.caseno)
         self.stepsdirpath = self.casedirpath / Path("Steps")
 
@@ -44,8 +42,14 @@ class TC1(unittest.TestCase):
         for i in self.excel.Get_Excution_DataSet("executed"):
 
             try:
+                bro = self.excel.Get_Value_By_ColName("Browser", i)
+                if bro is not None:
+                    self.browser = bro
+
+                self.page = WebPage()
+                self.driver = self.page.Start_Up(CONST.URL, self.browser)
                 if i != '':
-                    self.page.Log_in(self.page, self.excel, self.caseno, i, self.casedirpath)
+                    self.page.Log_in(self.excel, self.caseno, i, self.casedirpath)
 
                     if self.page.Verify_Text(self.excel.Get_Value_By_ColName("Assertion", i),
                                              StartPageAlias_CSS['Login_UserName']):
@@ -57,24 +61,28 @@ class TC1(unittest.TestCase):
                 print(msg)
 
                 Generate_Report(self.driver, self.excel, self.report, "fail", self.caseno, self.casedirpath, i)
-                if self.driver.title == "Start":
-                    self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])
-                    WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
-                elif self.driver.title == "KV Login Page":
-                    self.driver.refresh()
+                #if self.driver.title == "Start":
+                #    self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])
+                #    WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
+                #elif self.driver.title == "KV Login Page":
+                #    self.driver.refresh()
+                self.driver.quit()
+                #time.sleep(10)
+
             else:
 
                 Generate_Report(self.driver, self.excel, self.report, "pass", self.caseno, self.casedirpath, i)
 
-                time.sleep(2)
-                self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])
-                WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
+                #time.sleep(2)
+                #self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])
+                #WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
+                self.driver.quit()
+                #time.sleep(10)
 
     def tearDown(self):
         self.report.Save_Excel()
         self.excel = Excel(self.reportfilepath)
         self.excel.Select_Sheet_By_Name(str(self.caseno))
-        self.driver.quit()
         Generate_Final_Report(self.excel, self.report, self.caseno)
         self.report.Save_Excel()
 

@@ -43,7 +43,15 @@ class TC7(unittest.TestCase):
         for i in self.excel.Get_Excution_DataSet("executed"):
 
             try:
-                current_step = self.page.Log_in(self.page, self.excel, self.caseno, i, self.casedirpath)
+
+                bro = self.excel.Get_Value_By_ColName("Browser", i)
+                if bro is not None:
+                    self.browser = bro
+
+                self.page = WebPage()
+                self.driver = self.page.Start_Up(CONST.URL, self.browser)
+
+                current_step = self.page.Log_in(self.excel, self.caseno, i, self.casedirpath)
 
                 self.page.LabelClick(StartPageAlias_CSS['Menu-PO Maintenance'])
 
@@ -61,20 +69,17 @@ class TC7(unittest.TestCase):
 
                 Generate_Report(self.driver, self.excel, self.report, "fail", self.caseno, self.casedirpath, i)
 
-                self.driver.refresh()
+                self.driver.quit()
 
             else:
 
                 Generate_Report(self.driver, self.excel, self.report, "pass", self.caseno, self.casedirpath, i)
 
-                time.sleep(2)
-                self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])
-                WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
+                self.driver.quit()
 
     def tearDown(self):
         self.report.Save_Excel()
         self.excel = Excel(self.reportfilepath)
         self.excel.Select_Sheet_By_Name(str(self.caseno))
-        self.driver.quit()
         Generate_Final_Report(self.excel, self.report, self.caseno)
         self.report.Save_Excel()

@@ -36,7 +36,11 @@ class WebPage:
             if self.browser != "Firefox":
                 self.driver.maximize_window()
             else:
-                time.sleep(5)
+                try:
+                #time.sleep(5)
+                    self.driver.maximize_window()
+                except Exception as msg:
+                    print(msg)
         except Exception as msg:
             print(msg)
 
@@ -58,20 +62,25 @@ class WebPage:
         except Exception as msg:
             print(msg)
 
-    def Log_in(self, page, excel, test_case_no, data_set, case_dir_path, start_step=1):
+    def Log_in(self, excel, test_case_no, data_set, case_dir_path, start_step=1):
 
         try:
-            page.Input(excel.Get_Value_By_ColName("ID", data_set, case_dir_path), LoginPageAlias_CSS['ID_Field'])
+            self.Input(excel.Get_Value_By_ColName("ID", data_set, case_dir_path), LoginPageAlias_CSS['ID_Field'])
             self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
                                         % (str(test_case_no), str(data_set), start_step))
-            page.Input(excel.Get_Value_By_ColName("PW", data_set, case_dir_path), LoginPageAlias_CSS['PW_Field'])
+            pw = excel.Get_Value_By_ColName("PW", data_set, case_dir_path)
+            self.Input(pw, LoginPageAlias_CSS['PW_Field'])
             self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
                                         % (str(test_case_no), str(data_set), start_step + 1))
-            page.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
+
+            if self.browser != "Firefox":
+                self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
+            else:
+                self.Send_key(Keys.ENTER, LoginPageAlias_CSS['PW_Field'])
+
             time.sleep(1)
 
-            steps = page.Verification_Code(excel.Get_Value_By_ColName("PW", data_set), test_case_no, data_set,
-                                           case_dir_path, start_step + 1)
+            steps = self.Verification_Code(pw, test_case_no, data_set, case_dir_path, start_step + 1)
 
             WebDriverWait(self.driver, 2, 0.5).until(EC.title_is("Start"))
 
@@ -107,7 +116,7 @@ class WebPage:
                 elif self.browser == "Firefox":
                     try:
                         Jscript = "var inbox =document.querySelector('input[name=password]');"  \
-                                   "inbox.value = %s;" % pwd
+                                   "inbox.value = '%s';" % pwd
                         self.driver.execute_script(Jscript)
 
                         self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
@@ -117,37 +126,29 @@ class WebPage:
                         print(msg)
 
                 time.sleep(2)
-                self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
+
+                if self.browser != "Firefox":
+                    self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
+                else:
+                    self.Send_key(Keys.ENTER, LoginPageAlias_CSS['PW_Field'])
 
                 return step + 2
         else:
             return step
 
-    def Input(self, text, Element, Exception="input[name=%s]", driverT = ''):
+    def Input(self, text, Element, Expression="input[name=%s]", driverT = ''):
         if driverT != '':
             driver = driverT
         else:
             driver = self.driver
 
         try:
-            driver.find_element(By.CSS_SELECTOR, Exception % Element).clear()
-            driver.find_element(By.CSS_SELECTOR, Exception % Element).send_keys(str(text))
+            driver.find_element(By.CSS_SELECTOR, Expression % Element).clear()
+            driver.find_element(By.CSS_SELECTOR, Expression % Element).send_keys(str(text))
         except Exception as msg:
             print(msg)
 
-    def ButtonClick(self,Element,Exception="button[id=%s]", driverT = ''):
-
-        if driverT != '':
-            driver = driverT
-        else:
-            driver = self.driver
-
-        try:
-            driver.find_element(By.CSS_SELECTOR, Exception % Element).click()
-        except Exception as msg:
-            print(msg)
-
-    def LabelClick(self,Element,Exception="label[id=%s]", driverT = ''):
+    def ButtonClick(self,Element,Expression="button[id=%s]", driverT = ''):
 
         if driverT != '':
             driver = driverT
@@ -155,21 +156,33 @@ class WebPage:
             driver = self.driver
 
         try:
-            driver.find_element(By.CSS_SELECTOR, Exception % Element).click()
+            driver.find_element(By.CSS_SELECTOR, Expression % Element).click()
         except Exception as msg:
             print(msg)
 
-    def RadioButtonClick(self, Element, Exception, path, row, colname):
+    def LabelClick(self,Element,Expression="label[id=%s]", driverT = ''):
+
+        if driverT != '':
+            driver = driverT
+        else:
+            driver = self.driver
 
         try:
-            elements = self.driver.find_elements(By.CSS_SELECTOR, Exception)
+            driver.find_element(By.CSS_SELECTOR, Expression % Element).click()
+        except Exception as msg:
+            print(msg)
+
+    def RadioButtonClick(self, Element, Expression, path, row, colname):
+
+        try:
+            elements = self.driver.find_elements(By.CSS_SELECTOR, Expression)
 
             if Element.lower() != "randomindex":
                 elements[POMaintenancePageAlias_CSS[Element]].click()
             else:
                 randomvalue = random.choice(elements)
                 index = elements.index(randomvalue)
-                labels = self.driver.find_elements(By.CSS_SELECTOR, Exception.replace("input", "label"))
+                labels = self.driver.find_elements(By.CSS_SELECTOR, Expression.replace("input", "label"))
                 file = Path(path) / Path("%d_%s_%s.random" % (row, colname, labels[index * 2 + 1].text))
                 file.touch()
                 randomvalue.click()
@@ -177,8 +190,19 @@ class WebPage:
         except Exception as msg:
             print(msg)
 
+    def Send_key(self, key, Element, Expression="input[name=%s]", driverT = ''):
+        if driverT != '':
+            driver = driverT
+        else:
+            driver = self.driver
 
-    def Verify_Text(self,text,Exception,driverT = ''):
+        try:
+            driver.find_element(By.CSS_SELECTOR, Expression % Element).send_keys(key)
+        except Exception as msg:
+            print(msg)
+
+
+    def Verify_Text(self,text,Expression,driverT = ''):
 
         if driverT != '':
             driver = driverT
@@ -186,7 +210,7 @@ class WebPage:
             driver = self.driver
 
         try:
-            element_text = driver.find_element(By.CSS_SELECTOR, Exception).text
+            element_text = driver.find_element(By.CSS_SELECTOR, Expression).text
             element_text = ''.join(element_text.split())
             text = ''.join(text.split())
 
