@@ -53,31 +53,18 @@ class TC1(unittest.TestCase):
 
                     if self.page.Verify_Text(self.excel.Get_Value_By_ColName("Assertion", i),
                                              StartPageAlias_CSS['Login_UserName']):
-                        print("success")
+                        Log("success", self.caseno, i, self.casedirpath)
                     else:
                         raise AssertionError("The element not contains the Assertion text")
 
             except Exception as msg:
-                print(msg)
-
+                Log(str(msg), self.caseno, i, self.casedirpath)
                 Generate_Report(self.driver, self.excel, self.report, "fail", self.caseno, self.casedirpath, i)
-                #if self.driver.title == "Start":
-                #    self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])
-                #    WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
-                #elif self.driver.title == "KV Login Page":
-                #    self.driver.refresh()
-                self.driver.quit()
-                #time.sleep(10)
 
+                self.driver.quit()
             else:
-
                 Generate_Report(self.driver, self.excel, self.report, "pass", self.caseno, self.casedirpath, i)
-
-                #time.sleep(2)
-                #self.page.ButtonClick(StartPageAlias_CSS['Logout_Btn'])
-                #WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
                 self.driver.quit()
-                #time.sleep(10)
 
     def tearDown(self):
         self.report.Save_Excel()

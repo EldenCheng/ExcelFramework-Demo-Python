@@ -21,9 +21,6 @@ class TC2(unittest.TestCase):
         self.excel = Excel(CONST.EXCELPATH)
         self.excel.Select_Sheet_By_Name(str(self.caseno))
         self.report = Excel(self.reportfilepath)
-        self.page = WebPage()
-        self.driver = self.page.Start_Up(CONST.URL, self.browser)
-
         self.casedirpath = Path(self.reportfilepath).parent / Path("TC%d" % self.caseno)
         self.stepsdirpath = self.casedirpath / Path("Steps")
 
@@ -49,12 +46,12 @@ class TC2(unittest.TestCase):
 
                 if self.page.Verify_Text(self.excel.Get_Value_By_ColName("Assertion", i),
                                          LoginPageAlias_CSS['Login_Error_Prompt']):
-                    print("success")
+                    Log("success", self.caseno, i, self.casedirpath)
                 else:
                     raise AssertionError("The element not contains the Assertion text")
 
             except Exception as msg:
-                print(msg)
+                Log(str(msg), self.caseno, i, self.casedirpath)
 
                 Generate_Report(self.driver, self.excel, self.report, "fail", self.caseno, self.casedirpath, i)
 

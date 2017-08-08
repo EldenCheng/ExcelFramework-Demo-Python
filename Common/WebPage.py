@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -17,19 +18,21 @@ class WebPage:
         self.driver = driver
         self.browser =''
 
-    def Start_Up(self,url,browser = "Firefox"):
-
-        if browser == "Firefox":
-            self.driver = webdriver.Firefox()
-        elif browser == "Chrome":
-            self.driver = webdriver.Chrome(CONST.CHROMEDRIVERPATH)
-        elif browser == "IE":
-            self.driver = webdriver.Ie(CONST.IEDRIVERPATH)
-        else:
-            print("Not support this kind of driver")
-
-        self.browser = browser
+    def Start_Up(self,url,browser = "Chrome"):
         try:
+            if browser == "Firefox":
+                self.driver = webdriver.Firefox()
+            elif browser == "Chrome":
+                self.driver = webdriver.Chrome(CONST.CHROMEDRIVERPATH)
+            elif browser == "IE":
+                self.driver = webdriver.Ie(CONST.IEDRIVERPATH)
+            else:
+                raise Exception("Not support this kind of driver")
+        except Exception as msg:
+            print(msg)
+
+        try:
+            self.browser = browser
             self.driver.get(url)
             self.driver.implicitly_wait(5)
 
@@ -37,7 +40,6 @@ class WebPage:
                 self.driver.maximize_window()
             else:
                 try:
-                #time.sleep(5)
                     self.driver.maximize_window()
                 except Exception as msg:
                     print(msg)
@@ -72,11 +74,14 @@ class WebPage:
             self.Input(pw, LoginPageAlias_CSS['PW_Field'])
             self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
                                         % (str(test_case_no), str(data_set), start_step + 1))
-
+            time.sleep(2)
             if self.browser != "Firefox":
                 self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
             else:
                 self.Send_key(Keys.ENTER, LoginPageAlias_CSS['PW_Field'])
+                #time.sleep(2)
+                #if self.driver.title == "KV Login Page":
+                #self.Send_key(Keys.ENTER, LoginPageAlias_CSS['PW_Field'])
 
             time.sleep(1)
 
@@ -95,36 +100,38 @@ class WebPage:
 
             if self.driver.find_element(By.CSS_SELECTOR, LoginPageAlias_CSS['Login_Error_Prompt']).text \
                     == "Please input verification code.":
+                self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
+                                            % (str(test_case_no), str(data_set), step + 1))
                 try:
                     Jscript = "var code =prompt('Please input the Verification Code Manually');"  \
                                "var inbox =document.querySelector(%s);"   \
                                "inbox.value = code;" % LoginPageAlias_CSS['Verfidation_Code_Field']
-                    self.driver.execute_script(Jscript)
+                    try:
+                        self.driver.execute_script(Jscript)
+                    except Exception as msg:
+                        print(msg)
                     WebDriverWait(self.driver, 20, 1).until_not(EC.alert_is_present())
                     self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
-                                                % (str(test_case_no), str(data_set), step + 1))
+                                                % (str(test_case_no), str(data_set), step + 2))
                 except Exception as msg:
                     print(msg)
 
                 if self.browser != "Firefox":
 
                     self.Input(pwd, LoginPageAlias_CSS['PW_Field'])
-
                     self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
-                                                % (str(test_case_no), str(data_set), step + 2))
+                                                % (str(test_case_no), str(data_set), step + 3))
 
                 elif self.browser == "Firefox":
-                    try:
+
                         Jscript = "var inbox =document.querySelector('input[name=password]');"  \
                                    "inbox.value = '%s';" % pwd
-                        self.driver.execute_script(Jscript)
-
+                        try:
+                            self.driver.execute_script(Jscript)
+                        except Exception as msg:
+                            print(msg)
                         self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
-                                                    % (str(test_case_no), str(data_set), step + 2))
-
-                    except Exception as msg:
-                        print(msg)
-
+                                                % (str(test_case_no), str(data_set), step + 3))
                 time.sleep(2)
 
                 if self.browser != "Firefox":
@@ -132,7 +139,7 @@ class WebPage:
                 else:
                     self.Send_key(Keys.ENTER, LoginPageAlias_CSS['PW_Field'])
 
-                return step + 2
+                return step + 3
         else:
             return step
 
@@ -198,6 +205,20 @@ class WebPage:
 
         try:
             driver.find_element(By.CSS_SELECTOR, Expression % Element).send_keys(key)
+        except Exception as msg:
+            print(msg)
+
+    def Move_To_Click(self, Element, Expression="input#%s", driverT = ''):
+        if driverT != '':
+            driver = driverT
+        else:
+            driver = self.driver
+
+        try:
+           ActionChains(self.driver).move_to_element(self.driver.find_element(By.CSS_SELECTOR,
+                                                                              Expression % Element)).click().perform()
+
+           #self.driver.find_element(By.CSS_SELECTOR, Expression % Element).click()
         except Exception as msg:
             print(msg)
 

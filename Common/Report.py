@@ -71,10 +71,10 @@ def Generate_Final_Report(excel, report, test_case_no):
         report.Set_Value_By_ColName(rowindex, "Data set", wtrowindex)
         report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Expected result", rowindex), "Expected result",
                                     wtrowindex)
-        if res is None:
+        if exe.lower() == "skip":
             report.Set_Value_By_ColName("Skipped", "Result", wtrowindex)
             report.Set_Value_By_ColName("Skipped", "Browser", wtrowindex)
-        elif exe.lower() == "skip":
+        elif res is None:
             report.Set_Value_By_ColName("Skipped", "Result", wtrowindex)
             report.Set_Value_By_ColName("Skipped", "Browser", wtrowindex)
         else:
@@ -108,3 +108,17 @@ def Create_New_Report(folderpath= CONST.TESTREPORTPATH ):
         return str(reportfilepath)
     else:
         raise Exception("Cannot copy excel file")
+
+
+def Log(msg, caseno, dataset, casedirpath):
+    filepath = Path(casedirpath) / Path("Logs.txt")
+    if filepath.is_file():
+        filepath.touch()
+    otime = time.strftime("%Y-%m-%d_%H%M%S", time.localtime())
+    log = open(str(filepath), 'a')
+    log.writelines("Log of TC%d DataSet%d at %s :" % (caseno, dataset, str(otime)))
+    log.writelines("\n")
+    log.writelines(msg)
+    log.writelines("\n")
+    log.writelines("\n")
+    log.close()

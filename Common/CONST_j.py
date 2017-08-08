@@ -10,7 +10,6 @@ class CONST:
         CHROMEDRIVERPATH = json_data['CHROMEDRIVERPATH']
         IEDRIVERPATH = json_data['IEDRIVERPATH']
         TESTREPORTPATH = json_data['TESTREPORTPATH']
-        BROWSER = json_data['BROWSER']
     except Exception as msg:
         print(msg)
 

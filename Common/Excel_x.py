@@ -21,7 +21,7 @@ class Excel():
             self.excelst = self.excelwb.get_sheet_by_name(name)
             return self.excelst
         else:
-            raise Exception("Cannot find the given sheet name" % name)
+            raise Exception("Cannot find the given sheet name - %s" % name)
 
     def Get_Row_Numbers(self):
 
@@ -48,7 +48,7 @@ class Excel():
         if len(values) != 0:
             return values
         else:
-            raise Exception("Cannot get any value by using the given column name %s" % colname)
+            raise Exception("Cannot get any value by using the given column name - %s" % colname)
 
     def Get_Value_By_ColName(self, colname, row, path = ''):
 
@@ -70,9 +70,9 @@ class Excel():
                     else:
                         return value
                 else:
-                    raise Exception("Given row number is larger than the rows of the sheet")
+                    raise Exception("Given row number %d is larger than the rows of the sheet" % row)
         else:
-            raise Exception("Cannot find the given column name")
+            raise Exception("Cannot find the given column name - %s" % colname)
 
     def Set_Value_By_ColName(self, content, colname, row, sheetpassed=''):
         if sheetpassed != '':
@@ -86,15 +86,15 @@ class Excel():
                         sheet.cell(row=row + 1, column=c).value = content
                         break
                     else:
-                        raise Exception("Given row number is larger than the rows of the sheet")
+                        raise Exception("Given row number %d is larger than the rows of the sheet" % row)
             else:
-                raise Exception("Cannot find the column name")
+                raise Exception("Cannot find the column name - %s" % colname)
 
     def Set_Sheet_Name(self,old_name,new_name):
         if old_name in self.excelwb.sheetnames:
             self.excelwb.get_sheet_by_name(old_name).title = new_name
         else:
-            raise Exception("Cannot find the given sheet name" % old_name)
+            raise Exception("Cannot find the given sheet name - %s" % old_name)
 
     def Get_Excution_DataSet(self,colname,dataset_name="Data set",keyword="Not Yet"):
         DaList = []
