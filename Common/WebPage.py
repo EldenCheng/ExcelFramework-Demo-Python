@@ -80,8 +80,10 @@ class WebPage:
                 self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
             else:
                 self.Send_key(Keys.ENTER, LoginPageAlias_CSS['PW_Field'])
+                time.sleep(2)
                 if self.driver.title == "KV Login Page":
                     self.Move_To_Click(LoginPageAlias_CSS['Login_Btn_full_expression'])
+                    time.sleep(2)
                 if self.driver.title == "KV Login Page":
                     self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
 
@@ -94,9 +96,10 @@ class WebPage:
             return steps
 
         except Exception as msg:
-            raise Exception("Cannot login cause by %s" % str(msg))
+            print(msg)
 
     def Verification_Code(self,pwd, test_case_no, data_set, case_dir_path, step):
+
         if self.driver.title == "KV Login Page":
             time.sleep(2)
 
@@ -142,8 +145,10 @@ class WebPage:
                     self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
                 else:
                     self.Send_key(Keys.ENTER, LoginPageAlias_CSS['PW_Field'])
+                    time.sleep(2)
                     if self.driver.title == "KV Login Page":
                         self.Move_To_Click(LoginPageAlias_CSS['Login_Btn_full_expression'])
+                        time.sleep(2)
                     if self.driver.title == "KV Login Page":
                         self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
 
