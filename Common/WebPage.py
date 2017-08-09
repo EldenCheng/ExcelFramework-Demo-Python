@@ -12,13 +12,14 @@ import time
 from Common.CONST_j import CONST
 from Common.Alias import *
 
+
 class WebPage:
-    def __init__(self,driver=''):
+    def __init__(self, driver=''):
 
         self.driver = driver
         self.browser =''
 
-    def Start_Up(self,url,browser = "Chrome"):
+    def Start_Up(self, url, browser="Chrome"):
         try:
             if browser == "Firefox":
                 self.driver = webdriver.Firefox()
@@ -50,7 +51,7 @@ class WebPage:
             try:
                 self.By_Pass_External_Page()
                 WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
-            except Exception as msg:
+            except Exception:
                 raise Exception("The Exception page cannot be skipped or cannot access the website")
         else:
             time.sleep(5)
@@ -79,9 +80,10 @@ class WebPage:
                 self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
             else:
                 self.Send_key(Keys.ENTER, LoginPageAlias_CSS['PW_Field'])
-                #time.sleep(2)
-                #if self.driver.title == "KV Login Page":
-                #self.Send_key(Keys.ENTER, LoginPageAlias_CSS['PW_Field'])
+                if self.driver.title == "KV Login Page":
+                    self.Move_To_Click(LoginPageAlias_CSS['Login_Btn_full_expression'])
+                if self.driver.title == "KV Login Page":
+                    self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
 
             time.sleep(1)
 
@@ -92,7 +94,7 @@ class WebPage:
             return steps
 
         except Exception as msg:
-            print(msg)
+            raise Exception("Cannot login cause by %s" % str(msg))
 
     def Verification_Code(self,pwd, test_case_no, data_set, case_dir_path, step):
         if self.driver.title == "KV Login Page":
@@ -128,8 +130,10 @@ class WebPage:
                                    "inbox.value = '%s';" % pwd
                         try:
                             self.driver.execute_script(Jscript)
+                            pass
                         except Exception as msg:
                             print(msg)
+
                         self.driver.save_screenshot(str(case_dir_path) + r"\Steps" + r"\TC%s_DataSet_%s_Step_%d.png"
                                                 % (str(test_case_no), str(data_set), step + 3))
                 time.sleep(2)
@@ -138,6 +142,10 @@ class WebPage:
                     self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
                 else:
                     self.Send_key(Keys.ENTER, LoginPageAlias_CSS['PW_Field'])
+                    if self.driver.title == "KV Login Page":
+                        self.Move_To_Click(LoginPageAlias_CSS['Login_Btn_full_expression'])
+                    if self.driver.title == "KV Login Page":
+                        self.ButtonClick(LoginPageAlias_CSS['Login_Btn'])
 
                 return step + 3
         else:
@@ -153,9 +161,9 @@ class WebPage:
             driver.find_element(By.CSS_SELECTOR, Expression % Element).clear()
             driver.find_element(By.CSS_SELECTOR, Expression % Element).send_keys(str(text))
         except Exception as msg:
-            print(msg)
+            raise Exception("Cannot input text %s to Element - %s cause by %s" % (text, Element, str(msg)))
 
-    def ButtonClick(self,Element,Expression="button[id=%s]", driverT = ''):
+    def ButtonClick(self, Element, Expression="button[id=%s]", driverT = ''):
 
         if driverT != '':
             driver = driverT
@@ -165,7 +173,7 @@ class WebPage:
         try:
             driver.find_element(By.CSS_SELECTOR, Expression % Element).click()
         except Exception as msg:
-            print(msg)
+            raise Exception("Cannot click Button - %s cause by %s" % (Element, str(msg)))
 
     def LabelClick(self,Element,Expression="label[id=%s]", driverT = ''):
 
@@ -177,7 +185,7 @@ class WebPage:
         try:
             driver.find_element(By.CSS_SELECTOR, Expression % Element).click()
         except Exception as msg:
-            print(msg)
+            raise Exception("Cannot click Label - %s cause by %s" % (Element, str(msg)))
 
     def RadioButtonClick(self, Element, Expression, path, row, colname):
 
@@ -195,7 +203,7 @@ class WebPage:
                 randomvalue.click()
 
         except Exception as msg:
-            print(msg)
+            raise Exception("Cannot click Radio Button in Group - %s cause by %s" % (Element, str(msg)))
 
     def Send_key(self, key, Element, Expression="input[name=%s]", driverT = ''):
         if driverT != '':
@@ -206,9 +214,9 @@ class WebPage:
         try:
             driver.find_element(By.CSS_SELECTOR, Expression % Element).send_keys(key)
         except Exception as msg:
-            print(msg)
+            raise Exception("Cannot send Keys - %s to Element - %s cause by %s" % (key, Element, str(msg)))
 
-    def Move_To_Click(self, Element, Expression="input#%s", driverT = ''):
+    def Move_To_Click(self, Expression, driverT = ''):
         if driverT != '':
             driver = driverT
         else:
@@ -216,14 +224,11 @@ class WebPage:
 
         try:
            ActionChains(self.driver).move_to_element(self.driver.find_element(By.CSS_SELECTOR,
-                                                                              Expression % Element)).click().perform()
-
-           #self.driver.find_element(By.CSS_SELECTOR, Expression % Element).click()
+                                                                              Expression)).click().perform()
         except Exception as msg:
-            print(msg)
+            raise Exception("Cannot move then click Element - %s cause by %s" % (Exception, str(msg)))
 
-
-    def Verify_Text(self,text,Expression,driverT = ''):
+    def Verify_Text(self, text, Expression, driverT = ''):
 
         if driverT != '':
             driver = driverT
@@ -242,5 +247,5 @@ class WebPage:
                 print("The text of the element is not contents %s" % text)
                 return False
         except Exception as msg:
-            print(msg)
+            raise Exception("Cannot verify text - %s cause by %s" % (text, str(msg)))
 
