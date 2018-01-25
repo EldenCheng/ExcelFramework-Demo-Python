@@ -28,7 +28,7 @@ class WebPage:
             elif browser == "IE":
                 self.driver = webdriver.Ie(CONST.IEDRIVERPATH)
             else:
-                raise Exception("Not support this kind of driver")
+                raise Exception("Fail: Not support this kind of driver")
         except Exception as msg:
             print(msg)
 
@@ -52,7 +52,7 @@ class WebPage:
                 self.By_Pass_External_Page()
                 WebDriverWait(self.driver, 5, 0.5).until(EC.title_is("KV Login Page"))
             except Exception:
-                raise Exception("The Exception page cannot be skipped or cannot access the website")
+                raise Exception("Fail: The Exception page cannot be skipped or cannot access the website")
         else:
             time.sleep(5)
 
@@ -166,7 +166,7 @@ class WebPage:
             driver.find_element(By.CSS_SELECTOR, Expression % Element).clear()
             driver.find_element(By.CSS_SELECTOR, Expression % Element).send_keys(str(text))
         except Exception as msg:
-            raise Exception("Cannot input text %s to Element - %s cause by %s" % (text, Element, str(msg)))
+            raise Exception("Fail: Cannot input text %s to Element - %s cause by %s" % (text, Element, str(msg)))
 
     def ButtonClick(self, Element, Expression="button[id=%s]", driverT = ''):
 
@@ -178,7 +178,7 @@ class WebPage:
         try:
             driver.find_element(By.CSS_SELECTOR, Expression % Element).click()
         except Exception as msg:
-            raise Exception("Cannot click Button - %s cause by %s" % (Element, str(msg)))
+            raise Exception("Fail: Cannot click Button - %s cause by %s" % (Element, str(msg)))
 
     def LabelClick(self,Element,Expression="label[id=%s]", driverT = ''):
 
@@ -190,7 +190,7 @@ class WebPage:
         try:
             driver.find_element(By.CSS_SELECTOR, Expression % Element).click()
         except Exception as msg:
-            raise Exception("Cannot click Label - %s cause by %s" % (Element, str(msg)))
+            raise Exception("Fail: Cannot click Label - %s cause by %s" % (Element, str(msg)))
 
     def RadioButtonClick(self, Element, Expression, path, row, colname):
 
@@ -208,7 +208,7 @@ class WebPage:
                 randomvalue.click()
 
         except Exception as msg:
-            raise Exception("Cannot click Radio Button in Group - %s cause by %s" % (Element, str(msg)))
+            raise Exception("Fail: Cannot click Radio Button in Group - %s cause by %s" % (Element, str(msg)))
 
     def Send_key(self, key, Element, Expression="input[name=%s]", driverT = ''):
         if driverT != '':
@@ -219,7 +219,7 @@ class WebPage:
         try:
             driver.find_element(By.CSS_SELECTOR, Expression % Element).send_keys(key)
         except Exception as msg:
-            raise Exception("Cannot send Keys - %s to Element - %s cause by %s" % (key, Element, str(msg)))
+            raise Exception("Fail: Cannot send Keys - %s to Element - %s cause by %s" % (key, Element, str(msg)))
 
     def Move_To_Click(self, Expression, driverT = ''):
         if driverT != '':
@@ -231,7 +231,7 @@ class WebPage:
            ActionChains(self.driver).move_to_element(self.driver.find_element(By.CSS_SELECTOR,
                                                                               Expression)).click().perform()
         except Exception as msg:
-            raise Exception("Cannot move then click Element - %s cause by %s" % (Exception, str(msg)))
+            raise Exception("Fail: Cannot move then click Element - %s cause by %s" % (Exception, str(msg)))
 
     def Verify_Text(self, text, Expression, driverT = ''):
 
@@ -252,5 +252,5 @@ class WebPage:
                 print("The text of the element is not contents %s" % text)
                 return False
         except Exception as msg:
-            raise Exception("Cannot verify text - %s cause by %s" % (text, str(msg)))
+            raise Exception("Fail: Cannot verify text - %s cause by %s" % (text, str(msg)))
 

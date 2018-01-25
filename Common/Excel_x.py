@@ -18,7 +18,7 @@ class Excel():
 
     def Select_Sheet_By_Name(self, name):
         if name in self.excelwb.sheetnames:
-            self.excelst = self.excelwb.get_sheet_by_name(name)
+            self.excelst = self.excelwb[name]
             return self.excelst
         else:
             raise Exception("Cannot find the given sheet name - %s" % name)
@@ -92,7 +92,7 @@ class Excel():
 
     def Set_Sheet_Name(self,old_name,new_name):
         if old_name in self.excelwb.sheetnames:
-            self.excelwb.get_sheet_by_name(old_name).title = new_name
+            self.excelwb[old_name].title = new_name
         else:
             raise Exception("Cannot find the given sheet name - %s" % old_name)
 

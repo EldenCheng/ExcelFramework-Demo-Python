@@ -67,31 +67,32 @@ def Generate_Final_Report(excel, report, test_case_no):
         res = excel.Get_Value_By_ColName("Result", rowindex)
         exe = excel.Get_Value_By_ColName("executed", rowindex)
 
-        report.Set_Value_By_ColName(test_case_no, "Case No", wtrowindex)
-        report.Set_Value_By_ColName(rowindex, "Data set", wtrowindex)
-        report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Expected result", rowindex), "Expected result",
-                                    wtrowindex)
-        if exe.lower() == "skip":
-            report.Set_Value_By_ColName("Skipped", "Result", wtrowindex)
-            report.Set_Value_By_ColName("Skipped", "Browser", wtrowindex)
-        elif res is None:
-            report.Set_Value_By_ColName("Skipped", "Result", wtrowindex)
-            report.Set_Value_By_ColName("Skipped", "Browser", wtrowindex)
-        else:
-            report.Set_Value_By_ColName(res, "Result", wtrowindex)
-            if bro is not None:
-                report.Set_Value_By_ColName(bro, "Browser", wtrowindex)
+        if exe is not None:
+            report.Set_Value_By_ColName(test_case_no, "Case No", wtrowindex)
+            report.Set_Value_By_ColName(rowindex, "Data set", wtrowindex)
+            report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Expected result", rowindex), "Expected result",
+                                        wtrowindex)
+            if exe.lower() == "skip":
+                report.Set_Value_By_ColName("Skipped", "Result", wtrowindex)
+                report.Set_Value_By_ColName("Skipped", "Browser", wtrowindex)
+            elif res is None:
+                report.Set_Value_By_ColName("Skipped", "Result", wtrowindex)
+                report.Set_Value_By_ColName("Skipped", "Browser", wtrowindex)
             else:
-                report.Set_Value_By_ColName("Chrome", "Browser", wtrowindex)
-        report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Description", rowindex),"Description", wtrowindex)
-        report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Screen capture", rowindex), "Screen capture",
-                                    wtrowindex)
-        report.Set_Value_By_ColName(exe, "executed", wtrowindex)
-        report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Assertion", rowindex), "Assertion", wtrowindex)
-        report.Set_Value_By_ColName(excel.Get_Value_By_ColName("ID", rowindex), "ID", wtrowindex)
-        report.Set_Value_By_ColName(excel.Get_Value_By_ColName("PW", rowindex), "PW", wtrowindex)
+                report.Set_Value_By_ColName(res, "Result", wtrowindex)
+                if bro is not None:
+                    report.Set_Value_By_ColName(bro, "Browser", wtrowindex)
+                else:
+                    report.Set_Value_By_ColName("Chrome", "Browser", wtrowindex)
+            report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Description", rowindex),"Description", wtrowindex)
+            report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Screen capture", rowindex), "Screen capture",
+                                        wtrowindex)
+            report.Set_Value_By_ColName(exe, "executed", wtrowindex)
+            report.Set_Value_By_ColName(excel.Get_Value_By_ColName("Assertion", rowindex), "Assertion", wtrowindex)
+            report.Set_Value_By_ColName(excel.Get_Value_By_ColName("ID", rowindex), "ID", wtrowindex)
+            report.Set_Value_By_ColName(excel.Get_Value_By_ColName("PW", rowindex), "PW", wtrowindex)
 
-        wtrowindex = wtrowindex + 1
+            wtrowindex = wtrowindex + 1
 
 def Create_New_Report(folderpath= CONST.TESTREPORTPATH ):
     otime = time.strftime("%Y-%m-%d_%H%M%S", time.localtime())

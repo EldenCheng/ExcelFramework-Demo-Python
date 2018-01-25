@@ -39,6 +39,7 @@ class TC1(unittest.TestCase):
 
     def test_Excute(self):
 
+        #@BEGIN
         for i in self.excel.Get_Excution_DataSet("executed"):
 
             try:
@@ -65,6 +66,8 @@ class TC1(unittest.TestCase):
             else:
                 Generate_Report(self.driver, self.excel, self.report, "pass", self.caseno, self.casedirpath, i)
                 self.driver.quit()
+
+            #@END
 
     def tearDown(self):
         self.report.Save_Excel()

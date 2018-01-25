@@ -3,6 +3,7 @@
 LoginPageAlias_CSS = {'ID_Field': 'userId',
                       'PW_Field': 'password',
                       'Login_Btn': r'btn_login-btnEl',
+                      'Login_Btn_full_expression': r"button#btn_login-btnEl",
                       'Login_Error_Prompt': "div#viewport-message-area-body div span",
                       'Verfidation_Code_Field': "'input#textfld_vc-inputEl'"}
 

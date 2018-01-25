@@ -3,6 +3,7 @@
 from Common.CONST_j import CONST
 from Common.Excel_x import Excel
 from Common.Report import *
+from Common.TC_Runner import *
 
 import sys
 import unittest
@@ -18,8 +19,9 @@ if __name__ == '__main__':
     excel.Select_Sheet_By_Name("summary")
     for caseno in excel.Get_Excution_DataSet("execute","Case No","yes"):
         if excel.Get_Value_By_ColName("Script", caseno).lower() != "to do":
-            exec("from TestCase_Scripts.TC_%d import TC%d" % (caseno, caseno))
-            suite.addTest(eval("TC"+str(caseno))("test_Excute", reportfilepath))
+            #exec("from TestCase_Scripts.TC_%d import TC%d" % (caseno, caseno))
+            #suite.addTest(eval("TC"+str(caseno))("test_Excute", reportfilepath))
+            suite.addTest(eval("TC_Runner")("test_Excute", caseno, reportfilepath))
 
     result = unittest.TextTestRunner().run(suite)
 
