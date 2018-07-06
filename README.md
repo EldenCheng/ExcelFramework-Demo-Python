@@ -54,21 +54,21 @@
   ### Test Run
   1. Launch the command-line window or terminal
   2. Enter ```apache-jmeter-4.0/bin``` folder
-  3. Exectue ```jmeter -n -t [Test Plan file path] -l Results.jtl -e -r -j jmeter.log -o [Your Result folder]``` to let Jmeter run the load test in non-GUI mode
-    * Please notice every time before you lanuch the load test, you need to make sure ```apache-jmeter-4.0/bin``` folder has no ```Result.jtl``` file and ```[Your Result folder]``` is an empty folder
+  3. Execute ```jmeter -n -t [Test Plan file path] -l Results.jtl -e -r -j jmeter.log -o [Your Result folder]``` to let Jmeter run the load test in non-GUI mode
+    * Please notice every time before you launch the load test, you need to make sure ```apache-jmeter-4.0/bin``` folder has no ```Result.jtl``` file and ```[Your Result folder]``` is an empty folder
     * The actually VU number is all the VU number you set in all threadgroup * all load generators if any
       For example, we plan to run ```ElevateTestPerformance.jmx``` and set ```numbersOfThreads``` to 4 with 2 load generators(one local, one remote), the totally VUs is 19(threadgroups) * 4(numberofThreads) * 2(numberofLoadgenerators) = 152
-  ### Test Reslut
+  ### Test Result
   1. Jmeter will auto generate a HTML report and place it in ```[Your Result folder]``` if the load test is start with parameter ```-o``` option
-  2. Execute ```jmeter -g Results.jtl -o [Your Result folder]``` can generate the HTML reqport manually
-  ### Trouble Shotting
-  1. The HTTP Request responsed ```403 Forbidden```
+  2. Execute ```jmeter -g Results.jtl -o [Your Result folder]``` can generate the HTML report manually
+  ### Trouble Shooting
+  1. The HTTP Request responded ```403 Forbidden```
     * The proertyAdmin user has no right to manage that property
     * The propertyAdmin user is a testing/staging env user, but used in staging/testing env
-  2. The HTTP Request responsed ```500 Internal Server Error```
+  2. The HTTP Request responded ```500 Internal Server Error```
     * API server was really down
-    * The request body parameter cause the API endpoint occurred unhandle error
-  3. The HTTP Request responsed ```certificate_unkown...```
+    * The request body parameter cause the API endpoint occurred unhandled error
+  3. The HTTP Request responded ```certificate_unkown...```
     * The temp Jmeter certificate expired, delete the old ```ApacheJMeterTemporaryRootCA.crt``` in certificate manager of the OS system, launch Jmeter in GUI mode, load a pre-set test plan ```Recording```, click ```HTTP(S) Test Script Recorder``` and click ```Start```, Jmeter will renew the certificate, then enter ```apache-jmeter-4.0/bin``` folder, install the new ```ApacheJMeterTemporaryRootCA.crt```
-    * The API server not accept Jmeter's certificate, maybe can ask developer's help to shutdown the certificate checking on API server temporarily
+    * The API server not accept Jmeter's certificate, maybe can ask developer's help to shut down the certificate checking on API server temporarily
     
